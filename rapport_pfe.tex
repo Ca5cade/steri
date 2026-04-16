@@ -483,6 +483,205 @@ Un filtre de sécurité des vitesses implémente :
   \item \texttt{/navigate\_through\_poses} : Navigation par une séquence de poses
 \end{itemize}
 
+\section{Module Avancé de Traitement d'Images pour SLAM}
+
+\subsection{Pipeline de Traitement OpenCV}
+
+Le système SLAM utilise un pipeline sophistiqué de traitement d'images pour améliorer la qualité de la cartographie :
+
+\begin{enumerate}
+  \item \textbf{Prétraitement} : Suppression du bruit avec filtres gaussiens et morphologiques
+  \item \textbf{Détection des Caractéristiques} : Utilisation de détecteurs de coins (FAST, ORB) pour l'extraction de points d'intérêt
+  \item \textbf{Description des Caractéristiques} : Création de descripteurs robustes aux transformations
+  \item \textbf{Correspondance} : Mise en correspondance des points entre images successives
+  \item \textbf{Estimation de Pose} : Calcul de la transformation entre poses consécutives
+\end{enumerate}
+
+\subsection{Gestion des Défaillances de SLAM}
+
+L'algorithme SLAM peut échouer en présence de :
+
+\begin{itemize}
+  \item Mouvements rapides causant le flou de mouvement
+  \item Environnements texturés uniformément sans caractéristiques distinctes
+  \item Changements d'illumination drastiques
+  \item Occultations dynamiques (personnes, objets mobiles)
+\end{itemize}
+
+Pour gérer ces situations, le système implémente :
+
+\begin{itemize}
+  \item Détection de défaillance basée sur le nombre de caractéristiques appariées
+  \item Réduction dynamique de la vitesse du robot
+  \item Activation de capteurs supplémentaires pour améliorer la localisation
+  \item Basculement vers le mode manuel en cas d'erreur irrécupérable
+\end{itemize}
+
+\section{Architecture Distribuée et Temps Réel}
+
+\subsection{Considérations Temps Réel}
+
+ROS2 fournit un support natif pour les systèmes temps réel, qui est exploité dans ce projet pour :
+
+\begin{itemize}
+  \item \textbf{Priorités de Thread} : Les nœuds critiques fonctionnent avec des priorités élevées pour assurer la réactivité
+  \item \textbf{Déterminisme} : Utilisation de structures de données et d'algorithmes déterministes pour éviter les variations de latence
+  \item \textbf{Communication Fiable} : DDS avec qualité de service (QoS) garantissant la livraison des messages critiques
+  \item \textbf{Isolation des Ressources} : Allocation de CPU et de mémoire dédiées aux nœuds critiques
+\end{itemize}
+
+\subsection{Stratégie de Déploiement}
+
+Le système est déployé sur plusieurs machines physiques :
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|l|l|}
+\hline
+\textbf{Composant} & \textbf{Machine} & \textbf{CPU} & \textbf{RAM} \\
+\hline
+Robot Embarcation & Jetson Xavier & 8 cores ARM & 16 GB \\
+Serveur Backend & Ubuntu Server & Intel Xeon & 32 GB \\
+Base de Données & PostgreSQL & Intel Xeon & 16 GB \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Gestion des Ressources et Optimisation}
+
+\subsection{Optimisation de la Mémoire}
+
+La gestion efficace de la mémoire est critique pour les systèmes embarqués :
+
+\begin{itemize}
+  \item \textbf{Pooling d'Objets} : Réutilisation des structures de données pour réduire les allocations
+  \item \textbf{Compression des Grilles} : Encodage efficace des grilles d'occupation pour réduire l'empreinte mémoire
+  \item \textbf{Streaming des Données} : Traitement des données en flux au lieu de charger l'ensemble en mémoire
+  \item \textbf{Monitoring} : Surveillance continue de l'utilisation mémoire avec alertes
+\end{itemize}
+
+\subsection{Profiling et Benchmark}
+
+Des outils de profiling sont utilisés pour identifier les goulots d'étranglement :
+
+\begin{itemize}
+  \item \textbf{ROS2 Tools} : \texttt{ros2 trace} pour l'analyse détaillée de la performance
+  \item \textbf{Métriques CPU} : Monitoring des nœuds les plus gourmands en ressources
+  \item \textbf{Latence Inter-Nœuds} : Mesure des délais de communication
+  \item \textbf{Débit de Données} : Analyse du volume d'échanges de messages
+\end{itemize}
+
+\section{Système de Logs et Télémétrie}
+
+\subsection{Architecture de Logging}
+
+Un système de logging hiérarchisé fournit :
+
+\begin{itemize}
+  \item \textbf{Niveaux de Log} : DEBUG, INFO, WARN, ERROR, FATAL
+  \item \textbf{Routing par Topic} : Les logs peuvent être envoyés vers différentes destinations selon le contexte
+  \item \textbf{Persistence} : Stockage des logs critiques sur le disque pour post-analyse
+  \item \textbf{Filtrage Dynamique} : Modification du niveau de log sans redémarrage
+\end{itemize}
+
+\subsection{Télémétrie et Diagnostiques}
+
+Un système de télémétrie exporte des métriques :
+
+\begin{lstlisting}[language=C++]
+// Exemple de métriques exportées
+metrics::Counter frontier_count("exploration/frontier_count");
+metrics::Gauge map_coverage("slam/coverage_percentage");
+metrics::Histogram navigation_time("nav2/goal_completion_ms");
+
+frontier_count.increment(detected_frontiers.size());
+map_coverage.set(coverage_percent);
+navigation_time.observe(time_to_goal_ms);
+\end{lstlisting}
+
+\section{Sécurité au Niveau du Middleware}
+
+\subsection{Authentification et Autorisation}
+
+ROS2 supporte la sécurité distribuée :
+
+\begin{itemize}
+  \item \textbf{Authentication} : Vérification de l'identité des entités communiquantes
+  \item \textbf{Cryptage} : Chiffrement des messages entre nœuds distants
+  \item \textbf{Intégrité} : Vérification que les messages n'ont pas été modifiés
+  \item \textbf{Non-répudiation} : Garantie que l'expéditeur ne peut pas nier avoir envoyé le message
+\end{itemize}
+
+\subsection{Contrôle d'Accès Basé sur les Rôles}
+
+L'application implémente un système RBAC :
+
+\begin{itemize}
+  \item \textbf{Rôle Administrateur} : Accès complet à tous les contrôles et paramètres
+  \item \textbf{Rôle Opérateur} : Contrôle du robot et suivi des tâches
+  \item \textbf{Rôle Spectateur} : Accès en lecture seule aux statuts et métriques
+\end{itemize}
+
+\section{Stratégies de Récupération et Résilience}
+
+\subsection{Détection et Récupération des Défaillances}
+
+Le système implémente plusieurs couches de détection d'anomalies :
+
+\begin{algorithm}[H]
+\caption{Détection et Récupération des Défaillances}
+\begin{algorithmic}
+  \State Initialiser watchdog timer à 5 secondes
+  
+  \For{chaque nœud du système}
+    \If{pas de heartbeat reçu depuis timeout}
+      \State Enregistrer l'événement de défaillance
+      \State Exécuter la stratégie de récupération appropriée
+      \If{nœud critique}
+        \State Initier l'arrêt d'urgence
+      \Else
+        \State Redémarrer le nœud automatiquement
+      \EndIf
+    \EndIf
+  \EndFor
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{État Persistant et Checkpointing}
+
+Pour assurer la continuité après une défaillance :
+
+\begin{itemize}
+  \item \textbf{Snapshots} : Sauvegarde périodique de l'état du système
+  \item \textbf{Journalisation} : Enregistrement des actions irréversibles pour rejeu
+  \item \textbf{Récupération} : Restauration de l'état depuis le dernier snapshot
+  \item \textbf{Cohérence} : Vérification que l'état restauré est cohérent
+\end{itemize}
+
+\section{Planification et Ordonnancement Avancés}
+
+\subsection{Graphe de Tâches}
+
+L'exploration autonome est organisée en un graphe de tâches complexe :
+
+\begin{itemize}
+  \item Détection des frontières (parallèle)
+  \item Évaluation des frontières (parallèle)
+  \item Sélection de la meilleure frontière (séquentiel)
+  \item Planification de chemin (critique)
+  \item Suivi de trajectoire (temps réel)
+\end{itemize}
+
+\subsection{Ordonnancement et Priorités}
+
+Les tâches sont ordonnancées selon :
+
+\begin{itemize}
+  \item \textbf{Priorités Statiques} : Arrêt d'urgence $>$ Localisation $>$ Navigation $>$ Exploration
+  \item \textbf{Priorités Dynamiques} : Ajustées selon l'état du système et les objectifs actuels
+  \item \textbf{Allocation de Ressources} : Répartition équitable des ressources entre nœuds
+\end{itemize}
+
 \newpage
 
 % ==================== APPLICATION MOBILE ====================
@@ -751,6 +950,213 @@ Les données suivantes sont synchronisées en temps réel :
 
 % ==================== DÉFIS ET SOLUTIONS ====================
 \chapter{Défis Techniques et Solutions Implémentées}
+
+\chapter{Approfondissements Techniques du Système ROS2}
+
+\section{Mécanismes de Détection Avancés}
+
+\subsection{Algorithmes de Clustering pour Frontières}
+
+La détection brute des frontières produit souvent du bruit et des frontières fragmentées. Pour cela, le système utilise plusieurs algorithmes de clustering :
+
+\begin{itemize}
+  \item \textbf{Connected Components Labeling} : Identification des régions connexes de cellules de frontière
+  \item \textbf{K-Means Clustering} : Regroupement des frontières éloignées mais proches fonctionnellement
+  \item \textbf{DBSCAN} : Clustering basé sur la densité pour gérer les frontières de formes arbitraires
+\end{itemize}
+
+\subsection{Calcul du Gain Informatif}
+
+Pour chaque frontière détectée, un gain informatif est calculé selon :
+
+\begin{equation}
+G_f = w_1 \cdot \text{Area}(f) + w_2 \cdot \text{Distance}^{-1}(robot, f) + w_3 \cdot \text{Newness}(f)
+\end{equation}
+
+où :
+\begin{itemize}
+  \item $\text{Area}(f)$ : Taille de la région de frontière
+  \item $\text{Distance}(robot, f)$ : Distance euclidienne du robot à la frontière
+  \item $\text{Newness}(f)$ : Mesure de la "nouveauté" de la région (dernière fois visitée)
+  \item $w_1, w_2, w_3$ : Poids d'équilibrage ajustables
+\end{itemize}
+
+\section{Modèles de Mouvement et Cinématique}
+
+\subsection{Modèle de Robot Différentiel}
+
+Le robot utilise une cinématique différentielle :
+
+\begin{equation}
+\begin{bmatrix} \dot{x} \\ \dot{y} \\ \dot{\theta} \end{bmatrix} = \begin{bmatrix} \cos\theta & 0 \\ \sin\theta & 0 \\ 0 & 1 \end{bmatrix} \begin{bmatrix} v \\ \omega \end{bmatrix}
+\end{equation}
+
+où $v$ est la vitesse linéaire et $\omega$ la vitesse angulaire.
+
+\subsection{Prédiction d'Odométrie}
+
+L'odométrie est estimée via intégration des encodeurs de roue :
+
+\begin{lstlisting}[language=C++]
+struct OdometryPrediction {
+  double x, y, theta;
+  double vx, vy, vtheta;
+  
+  void predict(double left_ticks, double right_ticks, 
+               double dt, double wheel_radius, double wheelbase) {
+    double v_left = (left_ticks / ticks_per_meter) / dt;
+    double v_right = (right_ticks / ticks_per_meter) / dt;
+    
+    vx = (v_left + v_right) / 2.0;
+    vtheta = (v_right - v_left) / wheelbase;
+    
+    x += vx * cos(theta) * dt;
+    y += vx * sin(theta) * dt;
+    theta += vtheta * dt;
+  }
+};
+\end{lstlisting}
+
+\section{Implémentation du Système de Coordonnées et TF (Transform Framework)}
+
+\subsection{Arbre de Transformations}
+
+ROS2 utilise un système hiérarchique de transformations (TF) :
+
+\begin{verbatim}
+world
+  └── odom (odométrie brute)
+      └── base_link (chassis du robot)
+          ├── base_laser (LIDAR)
+          ├── base_camera (caméra)
+          └── base_imu (capteur inertiel)
+\end{verbatim}
+
+Chaque transformation est publiée avec un timestamp permettant l'interpolation temporelle.
+
+\subsection{Fusion des Données Odométriques}
+
+L'EKF (Extended Kalman Filter) fusionne les données de plusieurs capteurs :
+
+\begin{equation}
+\mathbf{x}_{k+1} = \mathbf{F}_k \mathbf{x}_k + \mathbf{w}_k
+\end{equation}
+
+\begin{equation}
+\mathbf{z}_k = \mathbf{H}_k \mathbf{x}_k + \mathbf{v}_k
+\end{equation}
+
+où $\mathbf{x}$ est l'état (position, orientation, vitesses), $\mathbf{z}$ les mesures et $\mathbf{w}, \mathbf{v}$ les bruits gaussiens.
+
+\section{Gestion de la Grille d'Occupation Dynamique}
+
+\subsection{Représentation et Stockage}
+
+La grille d'occupation utilise une représentation octree pour l'efficacité spatiale :
+
+\begin{lstlisting}[language=C++]
+struct OctreeNode {
+  bool is_leaf;
+  float occupancy_probability;
+  vector<OctreeNode*> children; // 8 enfants en 3D
+  
+  void update(float measurement) {
+    float log_odds = log(occupancy_probability / 
+                         (1.0 - occupancy_probability));
+    log_odds += measurement; // mise à jour log-odds
+    occupancy_probability = 1.0 - 1.0 / (1.0 + exp(log_odds));
+  }
+};
+\end{lstlisting}
+
+\subsection{Algorithme d'Inflation des Obstacles}
+
+Pour la navigation sécurisée, les obstacles sont "enflés" :
+
+\begin{equation}
+\text{cost} = \text{max}(0, 1 - d / d_{max})
+\end{equation}
+
+où $d$ est la distance à l'obstacle le plus proche et $d_{max}$ le rayon d'inflation.
+
+\section{Planification de Chemin Avancée}
+
+\subsection{Algorithmes de Planification Globale}
+
+Plusieurs planificateurs sont disponibles selon le contexte :
+
+\begin{enumerate}
+  \item \textbf{Theta*} : Amélioration de A* permettant les sauts diagonaux pour des chemins plus courts
+  \item \textbf{RRT*} : Rapidly-Exploring Random Tree avec optimisation asymptotique
+  \item \textbf{PRM} : Probabilistic Roadmap pour les environnements complexes
+\end{enumerate}
+
+\subsection{Planification Locale et Suivi de Trajectoire}
+
+Le contrôleur local (DWA - Dynamic Window Approach) génère des trajectoires courtes et évalue leur coût :
+
+\begin{equation}
+G(\mathbf{v}, \omega) = \alpha \cdot \text{heading}(\mathbf{v}, \omega) + \beta \cdot \text{dist}(\mathbf{v}, \omega) + \gamma \cdot \text{velocity}(\mathbf{v}, \omega)
+\end{equation}
+
+où les termes représentent l'orientation vers l'objectif, la distance aux obstacles, et la préférence pour des vitesses élevées.
+
+\section{Gestion Avancée des Défaillances Capteurs}
+
+\subsection{Validation et Filtrage des Données LIDAR}
+
+Les données LIDAR brutes peuvent être bruitées ou contenir des artefacts :
+
+\begin{itemize}
+  \item \textbf{Détection de Points Aberrants} : Suppression des points trop éloignés ou trop proches
+  \item \textbf{Lissage Temporel} : Moyenne mobile sur plusieurs scans
+  \item \textbf{Détection de Mouvements Dynamiques} : Identification des obstacles mobiles
+  \item \textbf{Récupération de Défaillance Capteur} : Détection de défaillance soudaine du LIDAR
+\end{itemize}
+
+\subsection{Fusion Multi-Capteurs IMU et LIDAR}
+
+L'IMU fournit des mesures haute fréquence qui complètent le LIDAR basse fréquence :
+
+\begin{lstlisting}[language=C++]
+class MultiSensorFusion {
+  void fuse_lidar_imu(const LaserScan& scan, 
+                      const Imu& imu) {
+    // Prédiction IMU rapide
+    predict_with_imu(imu);
+    
+    // Correction avec LIDAR
+    if (lidar_quality_good(scan)) {
+      correct_with_lidar(scan);
+    } else {
+      // Maintenir la prédiction IMU si LIDAR invalide
+      confidence_factor *= 0.95; // Réduire confiance
+    }
+  }
+};
+\end{lstlisting}
+
+\section{Stratégies de Navigation dans Environnements Complexes}
+
+\subsection{Navigation en Présence d'Obstacles Dynamiques}
+
+Les obstacles mobiles (personnes, véhicules) posent un défi spécifique :
+
+\begin{itemize}
+  \item \textbf{Prédiction de Trajectoire} : Estimation de la trajectoire future des obstacles
+  \item \textbf{Planification Temps-Espace} : Planification incluant la dimension temporelle
+  \item \textbf{Anticipation} : Modification du trajet avant la collision
+\end{itemize}
+
+\subsection{Gestion du Comportement Réactif vs Planifié}
+
+Le système bascule entre deux modes :
+
+\begin{itemize}
+  \item \textbf{Mode Réactif} : Arrêt immédiat et déviation si obstacle soudain
+  \item \textbf{Mode Planifié} : Utilisation du planificateur global en environnement stable
+  \item \textbf{Critères de Basculement} : Nombre d'obstacles dynamiques détectés, proximité, etc.
+\end{itemize}
 
 \section{Défis dans le Système ROS2}
 
