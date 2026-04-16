@@ -39,3 +39,14 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# local backup
+_backup/
+
+# ROS2 build directories
+turtle/build/
+turtle/install/
+turtle/log/
+turtle/src/build/
+turtle/src/install/
+turtle/src/log/

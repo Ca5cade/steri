@@ -1,0 +1,209 @@
+# Optimized Exploration Parameters
+# Enhanced configuration for maximum performance, reliability, and user experience
+
+exploration_coordinator:
+  ros__parameters:
+    # Core exploration parameters
+    exploration_timeout: 600.0              # 10 minutes maximum exploration time
+    stuck_timeout: 25.0                     # Reduced stuck timeout for faster recovery
+    min_map_coverage_to_start: 0.05         # Start exploration with minimal map coverage
+    auto_start_exploration: true            # Automatically start when conditions are met
+    
+    # Enhanced goal completion optimization
+    goal_tolerance: 1.5                     # Liberal navigation goal tolerance
+    goal_reached_tolerance: 2.0             # Ultra-liberal completion detection (orientation-free)
+    goal_timeout: 30.0                      # Automatic timeout for stuck goals
+    force_new_goal_distance: 2.5            # Force completion when close enough
+    stuck_distance_threshold: 0.15          # Lenient stuck detection
+    
+    # Dynamic tolerance optimization
+    enable_dynamic_tolerance: true          # Enable velocity-based tolerance adjustment
+    velocity_based_tolerance: true          # Adjust tolerance based on robot velocity
+    min_dynamic_tolerance: 0.8              # Minimum dynamic tolerance
+    max_dynamic_tolerance: 3.0              # Maximum dynamic tolerance
+    velocity_tolerance_factor: 2.0          # Velocity scaling factor
+    environmental_adaptation: true          # Adapt to environmental conditions
+    
+    # Performance monitoring and optimization
+    performance_monitoring: true            # Enable real-time performance tracking
+    adaptive_parameter_tuning: true         # Enable automatic parameter optimization
+    goal_completion_smoothing: true         # Enable smooth goal transitions
+    transition_optimization: true           # Optimize transitions between goals
+    
+    # Enhanced recovery parameters
+    recovery_rotation_speed: 0.6            # Faster recovery rotation
+    recovery_rotation_duration: 4.0         # Longer recovery rotation time
+    
+    # Frontier selection optimization
+    enable_intelligent_selection: true      # Use intelligent frontier selection
+    time_efficiency_weight: 0.3             # Weight for time efficiency in selection
+    exploration_value_weight: 0.4           # Weight for exploration value
+    accessibility_weight: 0.3               # Weight for path accessibility
+    
+    # Frame parameters
+    robot_base_frame: "base_link"
+    global_frame: "map"
+
+frontier_detector:
+  ros__parameters:
+    # Enhanced frontier detection
+    min_frontier_size: 8                    # Minimum frontier size (cells)
+    max_frontier_distance: 12.0             # Maximum frontier distance (meters)
+    frontier_travel_point_distance: 0.8     # Distance from frontier for goal placement
+    information_radius: 2.0                 # Radius for information gain calculation
+    
+    # Detection optimization
+    detection_frequency: 3.0                # Frontier detection frequency (Hz)
+    clustering_distance_threshold: 1.5      # Distance threshold for frontier clustering
+    min_cluster_size: 5                     # Minimum cluster size
+    
+    # Safety parameters
+    safety_margin: 0.6                      # Safety margin from obstacles
+    obstacle_inflation_radius: 0.4          # Obstacle inflation for safety
+    
+    # Frame parameters
+    robot_base_frame: "base_link"
+    global_frame: "map"
+
+intelligent_frontier_selector:
+  ros__parameters:
+    # Intelligent selection parameters
+    selection_frequency: 2.0                # Selection frequency (Hz)
+    enable_multi_frontier_planning: true    # Enable multi-frontier path planning
+    lookahead_distance: 8.0                 # Lookahead distance for planning
+    
+    # Scoring weights (must sum to 1.0)
+    distance_weight: 0.2                    # Weight for distance efficiency
+    information_weight: 0.3                 # Weight for information gain
+    accessibility_weight: 0.2               # Weight for path accessibility
+    efficiency_weight: 0.15                 # Weight for time efficiency
+    strategic_weight: 0.15                  # Weight for strategic positioning
+    
+    # Clustering parameters
+    clustering_distance_threshold: 3.0      # Distance threshold for clustering
+    max_clusters: 5                         # Maximum number of clusters
+    min_cluster_size: 2                     # Minimum cluster size
+    
+    # Optimization parameters
+    enable_dynamic_weighting: true          # Enable dynamic weight adjustment
+    exploration_phase_adaptation: true      # Adapt strategy based on exploration phase
+    visited_frontier_penalty: 0.5           # Penalty for previously visited frontiers
+    
+    # Performance parameters
+    max_planning_time: 2.0                  # Maximum planning time (seconds)
+    path_resolution: 0.1                    # Path planning resolution
+    
+    # Frame parameters
+    robot_base_frame: "base_link"
+    global_frame: "map"
+
+performance_monitor:
+  ros__parameters:
+    # Monitoring parameters
+    monitoring_frequency: 2.0               # Monitoring frequency (Hz)
+    performance_window_size: 10             # Number of recent goals to consider
+    efficiency_threshold: 0.7               # Efficiency threshold for adaptive tuning
+    
+    # Adaptive tuning parameters
+    enable_adaptive_tuning: true            # Enable automatic parameter adjustment
+    tuning_sensitivity: 0.1                 # Sensitivity of parameter adjustments
+    min_data_points: 5                      # Minimum data points before tuning
+    
+    # Publishing parameters
+    publish_detailed_metrics: true          # Publish detailed performance metrics
+    metrics_update_interval: 5.0            # Metrics update interval (seconds)
+    
+    # Efficiency calculation parameters
+    max_expected_goal_time: 45.0            # Maximum expected goal completion time
+    max_expected_velocity: 0.4              # Maximum expected robot velocity
+    movement_efficiency_weight: 0.3         # Weight for movement efficiency
+    success_rate_weight: 0.4                # Weight for success rate
+    time_efficiency_weight: 0.3             # Weight for time efficiency
+
+emergency_stop_controller:
+  ros__parameters:
+    # Enhanced safety parameters
+    emergency_stop_distance: 0.15           # Emergency stop distance (meters)
+    warning_distance: 0.3                   # Warning distance (meters)
+    monitoring_frequency: 50.0              # High-frequency monitoring (Hz)
+    recovery_distance: 0.5                  # Distance to move back during recovery
+    
+    # Predictive safety
+    enable_predictive_stopping: true        # Enable predictive collision avoidance
+    velocity_prediction_time: 1.0           # Time horizon for velocity prediction
+    deceleration_factor: 0.8                # Deceleration factor for smooth stopping
+    
+    # Recovery parameters
+    recovery_timeout: 10.0                  # Maximum recovery time
+    recovery_rotation_speed: 0.3            # Rotation speed during recovery
+    max_recovery_attempts: 3                # Maximum recovery attempts
+    
+    # Safety zones
+    critical_zone_distance: 0.1             # Critical zone distance
+    warning_zone_distance: 0.25             # Warning zone distance
+    safe_zone_distance: 0.4                 # Safe zone distance
+
+# Navigation integration parameters
+nav2_integration:
+  ros__parameters:
+    # Goal completion integration
+    orientation_free_mode: true             # Enable orientation-free goal completion
+    dynamic_tolerance_mode: true            # Enable dynamic tolerance adjustment
+    
+    # Performance optimization
+    goal_checker_frequency: 10.0            # Goal checker frequency (Hz)
+    progress_checker_frequency: 5.0         # Progress checker frequency (Hz)
+    
+    # Recovery integration
+    enable_nav2_recovery: false             # Disable Nav2 recovery (use custom recovery)
+    custom_recovery_mode: true              # Enable custom recovery behaviors
+    
+    # Timeout parameters
+    navigation_timeout: 45.0                # Navigation timeout (seconds)
+    recovery_timeout: 15.0                  # Recovery timeout (seconds)
+
+# Visualization parameters
+visualization:
+  ros__parameters:
+    # Marker parameters
+    frontier_marker_scale: 0.3              # Frontier marker scale
+    goal_marker_scale: 0.5                  # Goal marker scale
+    path_marker_width: 0.1                  # Path marker width
+    
+    # Color scheme
+    frontier_color_r: 0.0                   # Frontier marker red component
+    frontier_color_g: 1.0                   # Frontier marker green component
+    frontier_color_b: 0.0                   # Frontier marker blue component
+    goal_color_r: 1.0                       # Goal marker red component
+    goal_color_g: 0.0                       # Goal marker green component
+    goal_color_b: 0.0                       # Goal marker blue component
+    
+    # Update frequencies
+    marker_update_frequency: 5.0            # Marker update frequency (Hz)
+    status_update_frequency: 2.0            # Status update frequency (Hz)
+    
+    # Display options
+    show_frontier_clusters: true            # Show frontier clusters
+    show_planned_path: true                 # Show planned exploration path
+    show_performance_metrics: true          # Show performance metrics
+    show_safety_zones: true                 # Show safety zones
+
+# Logging parameters
+logging:
+  ros__parameters:
+    # Log levels
+    exploration_log_level: "info"           # Exploration coordinator log level
+    frontier_log_level: "info"              # Frontier detector log level
+    selector_log_level: "info"              # Frontier selector log level
+    monitor_log_level: "info"               # Performance monitor log level
+    safety_log_level: "warn"                # Safety controller log level
+    
+    # Log frequencies
+    status_log_frequency: 10.0              # Status logging frequency (seconds)
+    performance_log_frequency: 30.0         # Performance logging frequency (seconds)
+    
+    # Debug options
+    enable_debug_logging: false             # Enable debug logging
+    log_goal_completion_details: true       # Log detailed goal completion info
+    log_frontier_selection_details: true    # Log detailed frontier selection info
+    log_performance_metrics: true           # Log performance metrics

@@ -1,0 +1,57 @@
+<!--
+  Enhanced Wall Following Behavior Tree
+  
+  This behavior tree integrates wall following capabilities with navigation:
+  1. Attempts normal navigation first
+  2. Falls back to wall following if path is blocked
+  3. Combines wall following with obstacle avoidance
+  4. Provides smooth transitions between behaviors
+-->
+
+<root main_tree_to_execute="MainTree">
+  <BehaviorTree ID="MainTree">
+    <RecoveryNode number_of_retries="6" name="NavigateRecovery">
+      <PipelineSequence name="NavigateWithWallFollowing">
+        <RateController hz="1.0">
+          <RecoveryNode number_of_retries="1" name="FollowPath">
+            <Sequence name="NavigationSequence">
+              <ComputePathToPose goal="{goal}" path="{path}" planner_id="GridBased"/>
+              <Fallback name="PathExecutionFallback">
+                <FollowPath path="{path}" controller_id="FollowPath"/>
+                <Sequence name="WallFollowingSequence">
+                  <WallFollowingAction target_distance="0.4" max_duration="30.0"/>
+                  <ComputePathToPose goal="{goal}" path="{path}" planner_id="GridBased"/>
+                  <FollowPath path="{path}" controller_id="FollowPath"/>
+                </Sequence>
+              </Fallback>
+            </Sequence>
+            <ReactiveFallback name="RecoveryFallback">
+              <GoalUpdated/>
+              <Sequence name="RecoverySequence">
+                <ClearEntireCostmap name="ClearLocalCostmap-Context" service_name="local_costmap/clear_entirely_local_costmap"/>
+                <ClearEntireCostmap name="ClearGlobalCostmap-Context" service_name="global_costmap/clear_entirely_global_costmap"/>
+                <Spin spin_dist="1.57"/>
+              </Sequence>
+            </ReactiveFallback>
+          </RecoveryNode>
+        </RateController>
+      </PipelineSequence>
+      <ReactiveFallback name="RecoveryFallback">
+        <GoalUpdated/>
+        <RoundRobin name="RecoveryActions">
+          <Sequence name="ClearingRecovery">
+            <ClearEntireCostmap name="ClearLocalCostmap-Recovery" service_name="local_costmap/clear_entirely_local_costmap"/>
+            <ClearEntireCostmap name="ClearGlobalCostmap-Recovery" service_name="global_costmap/clear_entirely_global_costmap"/>
+          </Sequence>
+          <Spin spin_dist="1.57" name="SpinRecovery"/>
+          <Wait wait_duration="5" name="WaitRecovery"/>
+          <BackUp backup_dist="0.30" backup_speed="0.05" name="BackupRecovery"/>
+          <Sequence name="ExtendedWallFollowing">
+            <WallFollowingAction target_distance="0.4" max_duration="60.0"/>
+            <Spin spin_dist="3.14"/>
+          </Sequence>
+        </RoundRobin>
+      </ReactiveFallback>
+    </RecoveryNode>
+  </BehaviorTree>
+</root>

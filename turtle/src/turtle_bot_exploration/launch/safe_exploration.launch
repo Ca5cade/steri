@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Enhanced Safe Exploration System -->
+  <!-- Complete collision-free autonomous exploration -->
+  
+  <!-- Arguments -->
+  <arg name="use_sim_time" default="true"/>
+  <arg name="params_file" default="$(find-pkg-share turtle_bot_navigation)/config/nav2_params.yaml"/>
+  <arg name="rviz_config" default="$(find-pkg-share turtle_bot_exploration)/config/exploration.rviz"/>
+  <arg name="log_level" default="info"/>
+
+  <!-- 1. Gazebo Simulation -->
+  <include file="$(find-pkg-share turtle_bot_gazebo)/launch/gazebo.launch.py">
+    <arg name="use_sim_time" value="$(var use_sim_time)"/>
+  </include>
+
+  <!-- 2. Navigation Stack with Enhanced Safety -->
+  <include file="$(find-pkg-share nav2_bringup)/launch/navigation_launch.py">
+    <arg name="use_sim_time" value="$(var use_sim_time)"/>
+    <arg name="params_file" value="$(var params_file)"/>
+    <arg name="autostart" value="true"/>
+    <arg name="use_composition" value="false"/>
+  </include>
+
+  <!-- 3. SLAM Mapping -->
+  <include file="$(find-pkg-share nav2_bringup)/launch/slam_launch.py">
+    <arg name="use_sim_time" value="$(var use_sim_time)"/>
+    <arg name="autostart" value="true"/>
+    <arg name="use_composition" value="false"/>
+  </include>
+
+  <!-- 4. RViz Visualization -->
+  <node pkg="rviz2" exec="rviz2" name="rviz2" output="screen" args="-d $(var rviz_config)">
+    <param name="use_sim_time" value="$(var use_sim_time)"/>
+  </node>
+
+  <!-- 5. Enhanced Frontier Detection -->
+  <node pkg="turtle_bot_exploration" exec="frontier_detector" name="frontier_detector" output="screen">
+    <!-- Enhanced Safety Parameters -->
+    <param name="use_sim_time" value="$(var use_sim_time)"/>
+    <param name="frontier_min_size" value="20"/>
+    <param name="frontier_travel_point_distance" value="0.8"/>
+    <param name="frontier_blacklist_radius" value="1.2"/>
+    <param name="frontier_search_radius" value="10.0"/>
+    <param name="frontier_min_distance" value="1.0"/>
+    <param name="global_frame" value="map"/>
+    <param name="robot_base_frame" value="base_link"/>
+  </node>
+
+  <!-- 6. Enhanced Exploration Coordinator -->
+  <node pkg="turtle_bot_exploration" exec="exploration_coordinator" name="exploration_coordinator" output="screen">
+    <!-- Enhanced Safety and Recovery Parameters -->
+    <param name="use_sim_time" value="$(var use_sim_time)"/>
+    <param name="exploration_timeout" value="1800.0"/>
+    <param name="stuck_timeout" value="8.0"/>
+    <param name="recovery_rotation_speed" value="0.5"/>
+    <param name="recovery_rotation_duration" value="12.0"/>
+    <param name="auto_start_exploration" value="true"/>
+    <param name="global_frame" value="map"/>
+    <param name="robot_base_frame" value="base_link"/>
+    <param name="min_frontier_distance" value="1.0"/>
+    <param name="max_exploration_range" value="15.0"/>
+    <param name="goal_tolerance" value="0.3"/>
+    <param name="frontier_safety_margin" value="0.8"/>
+  </node>
+
+</launch>

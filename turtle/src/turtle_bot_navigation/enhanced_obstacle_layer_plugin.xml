@@ -1,0 +1,5 @@
+<library path="enhanced_obstacle_layer">
+  <class type="turtle_bot_navigation::EnhancedObstacleLayer" base_class_type="nav2_costmap_2d::Layer">
+    <description>Enhanced obstacle layer with advanced wall detection capabilities for precise wall following navigation.</description>
+  </class>
+</library>

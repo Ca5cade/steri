@@ -1,0 +1,49 @@
+# Exploration Parameters Configuration
+# Optimized for TurtleBot-like robot autonomous exploration
+
+frontier_detector:
+  ros__parameters:
+    # Frontier detection parameters - Speed optimized
+    min_frontier_size: 8.0           # Smaller frontiers for faster goal selection
+    max_frontier_distance: 8.0       # Closer range for quicker navigation
+    frontier_travel_point_distance: 0.3  # Closer approach for speed
+    information_radius: 1.0          # Faster calculation radius
+
+    # Frame parameters
+    robot_base_frame: "base_link"
+    global_frame: "map"
+
+    # Performance parameters
+    update_rate: 2.0                 # Faster frontier detection (2Hz)
+
+exploration_coordinator:
+  ros__parameters:
+    # Exploration behavior parameters - Speed optimized
+    exploration_timeout: 300.0       # Reasonable timeout (5 minutes)
+    stuck_timeout: 8.0               # Quick stuck detection
+    min_map_coverage_to_start: 0.02  # Start exploration early (2%)
+    goal_tolerance: 0.4              # Balanced goal tolerance for speed
+    stuck_distance_threshold: 0.03   # Reasonable movement threshold
+    
+    # Recovery behavior parameters
+    recovery_rotation_speed: 0.3     # Angular velocity for stuck recovery (rad/s)
+    recovery_rotation_duration: 4.0  # Duration of recovery rotation (seconds)
+    
+    # Frame parameters
+    robot_base_frame: "base_link"
+    global_frame: "map"
+    
+    # Exploration control
+    auto_start_exploration: true     # Automatically start exploration when conditions are met
+    
+    # Goal selection parameters
+    distance_weight: 0.1             # Weight for distance in goal selection
+    information_gain_weight: 1.0     # Weight for information gain in goal selection
+    
+    # Safety parameters
+    min_frontier_distance: 0.5       # Minimum distance from robot to consider frontier (meters)
+    max_goal_age: 30.0              # Maximum age of goal before considering it stale (seconds)
+    
+    # Performance monitoring
+    log_exploration_stats: true      # Log exploration statistics
+    stats_update_interval: 10.0     # Statistics update interval (seconds)
