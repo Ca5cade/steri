@@ -50,3 +50,4 @@ turtle/log/
 turtle/src/build/
 turtle/src/install/
 turtle/src/log/
+.env
