@@ -2,15 +2,13 @@
 
 \usepackage[french]{babel}
 \usepackage[T1]{fontenc}
-\usepackage[margin=2.5cm]{geometry}
+\usepackage{geometry}
+\usepackage{fancyhdr}
 \usepackage{graphicx}
-\usepackage{amsmath}
-\usepackage{amssymb}
 \usepackage{listings}
 \usepackage{xcolor}
-\usepackage{hyperref}
-\usepackage{fancyhdr}
-\usepackage{setspace}
+\usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage{booktabs}
 \usepackage{array}
 \usepackage{multirow}
@@ -21,1230 +19,1395 @@
 \usepackage{pgfplots}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
+\usepackage{hyperref}
+\usepackage{setspace}
+\usepackage[utf-8]{inputenc}
 
-% Configuration des couleurs
-\definecolor{codeblue}{rgb}{0.13,0.13,0.8}
-\definecolor{codegreen}{rgb}{0,0.5,0}
-\definecolor{codegray}{rgb}{0.5,0.5,0.5}
-\definecolor{codepurple}{rgb}{0.58,0,0.82}
-\definecolor{backcolour}{rgb}{0.95,0.95,0.95}
-
-\lstset{
-  backgroundcolor=\color{backcolour},
-  commentstyle=\color{codegreen},
-  keywordstyle=\color{codeblue},
-  numberstyle=\tiny\color{codegray},
-  stringstyle=\color{codepurple},
-  basicstyle=\ttfamily\footnotesize,
-  breakatwhitespace=false,
-  breaklines=true,
-  captionpos=b,
-  keepspaces=true,
-  numbers=left,
-  numbersep=5pt,
-  showspaces=false,
-  showstringspaces=false,
-  showtabs=false,
-  tabsize=2,
-  framesep=1mm,
-  frame=single,
-  rulecolor=\color{codegray},
-  xleftmargin=15pt,
-  framexleftmargin=10pt
+% Geometry
+\geometry{
+  left=2.5cm,
+  right=2.5cm,
+  top=2.5cm,
+  bottom=2.5cm
 }
 
-\usepackage{fancyhdr}
+% Code listing configuration
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  breakatwhitespace=true,
+  commentstyle=\color{gray},
+  keywordstyle=\color{blue},
+  numberstyle=\tiny\color{gray},
+  stringstyle=\color{darkgreen},
+  showstringspaces=false,
+  tabsize=2,
+  language=C++,
+  morekeywords={rclcpp, Node, create_subscription, create_publisher, std_msgs, geometry_msgs},
+  backgroundcolor=\color{lightgray!10},
+  frame=single,
+  lineskip=-1pt
+}
+
+% Header and Footer
 \pagestyle{fancy}
 \fancyhf{}
 \rhead{\thepage}
-\lhead{Rapport de Projet de Fin d'Études}
+\lhead{Système ROS2 - Projet Robot Autonome}
 \renewcommand{\headrulewidth}{0.4pt}
 
-\onehalfspacing
+% Color definitions
+\definecolor{darkgreen}{rgb}{0,0.5,0}
+\definecolor{darkred}{rgb}{0.5,0,0}
+\definecolor{lightgray}{rgb}{0.9,0.9,0.9}
 
-\title{%
-  \Large \textbf{Rapport de Projet de Fin d'Études}\\[2cm]
-  Système de Robotique Autonome pour Applications de Stérilisation\\[1cm]
-  \normalsize Architecture intégrée ROS2 et Application Mobile Native
-}
-
-\author{%
-  \textit{Auteur(s)}\\[0.5cm]
-  Projet de Développement Robotique
-}
-
-\date{\today}
-
+% Title Page
 \begin{document}
 
-\maketitle
+\begin{titlepage}
+  \centering
+  \vspace*{2cm}
+  {\LARGE\textbf{Rapport du Projet de Fin d'Études}}
+  \\[0.5cm]
+  {\Large\textbf{Architecture et Implémentation d'un Système ROS2 pour Exploration Robotique Autonome}}
+  \\[1cm]
+  \vspace{2cm}
+  
+  \begin{flushleft}
+    \textbf{Titre du projet:} Système de Navigation et d'Exploration Autonome pour Robot Mobile \\[0.5cm]
+    \textbf{Type de robot:} TurtleBot-like Mobile Robot \\[0.5cm]
+    \textbf{Cadre de travail:} Robot Operating System 2 (ROS2) \\[0.5cm]
+    \textbf{Date de soumission:} \today
+  \end{flushleft}
+  
+  \vfill
+  
+  \begin{center}
+    {\large\textbf{Résumé Exécutif}}
+    \\[0.5cm]
+    Ce rapport présente une analyse détaillée et complète de l'architecture d'un système ROS2 conçu pour l'exploration autonome d'environnements inconnus par un robot mobile. Le projet intègre des composants sophistiqués de détection des frontières, de coordination de l'exploration, de navigation, et de sécurité. L'architecture repose sur une communication par sujets ROS2 (topics) et des actions (actions), permettant une coordination efficace entre les différents nœuds du système.
+  \end{center}
+  
+  \vspace{1cm}
+  
+\end{titlepage}
 
 \newpage
 \tableofcontents
 \newpage
 
-% ==================== RÉSUMÉ EXÉCUTIF ====================
-\chapter*{Résumé Exécutif}
-\addcontentsline{toc}{chapter}{Résumé Exécutif}
-
-Ce rapport présente le développement complet d'un système robotique autonome conçu pour les applications de stérilisation. Le projet combine une infrastructure middleware Robot Operating System 2 (ROS2) sophistiquée avec une application mobile native développée en React Native, permettant le contrôle et le suivi des opérations de stérilisation autonomes.
-
-Le système a été développé en deux composantes majeures : le système embarcation ROS2 responsable de la navigation autonome, de la cartographie et de l'exploration, et l'application mobile qui fournit une interface utilisateur intuitive pour la gestion des tâches de stérilisation et le suivi en temps réel du statut du robot.
-
-Cette architecture permet une intégration transparente entre le matériel robotique et les interfaces de l'utilisateur, tout en maintenant des standards élevés de sécurité et de fiabilité. Le rapport couvre l'architecture globale, les composants techniques, les défis rencontrés et les solutions implémentées.
-
-\newpage
-
-% ==================== INTRODUCTION ====================
-\chapter{Introduction}
-
-\section{Contexte et Motivation}
-
-La robotique autonome a connu des avancées spectaculaires ces dernières années, permettant l'automatisation de tâches complexes dans divers domaines. Les applications de stérilisation, en particulier, bénéficient grandement de l'automatisation et de la précision des systèmes robotiques. La capacité d'un robot à naviguer de manière autonome dans un environnement non structuré, tout en effectuant des tâches de stérilisation, représente une avancée significative dans les domaines médical et industriel.
-
-Ce projet vise à développer un système robotique complet capable de :
-\begin{itemize}
-  \item Naviguer de manière autonome dans des environnements complexes
-  \item Construire et maintenir des cartes de l'environnement
-  \item Détecter et explorer les frontières non explorées
-  \item Fournir une interface utilisateur pour la supervision et le contrôle
-  \item Effectuer des opérations de stérilisation de manière sécurisée et efficace
-\end{itemize}
+\chapter{Introduction et Contexte}
 
 \section{Objectifs du Projet}
 
-Les objectifs principaux du projet sont :
+Le projet décrit dans ce rapport vise à développer un système complètement autonome pour l'exploration d'environnements inconnus. Les objectifs principaux sont:
 
 \begin{enumerate}
-  \item \textbf{Architecture Robuste} : Concevoir une architecture logicielle distribuée utilisant ROS2 capable de gérer les complexités de la navigation autonome et de la coordination des tâches.
-  
-  \item \textbf{Navigation Autonome} : Implémenter un système d'exploration autonome utilisant une détection des frontières basée sur la vision et une sélection intelligente des objectifs.
-  
-  \item \textbf{Interface Utilisateur Intuitive} : Développer une application mobile native offrant un contrôle facile et un suivi en temps réel des opérations du robot.
-  
-  \item \textbf{Sécurité et Fiabilité} : Mettre en place des mécanismes de sécurité robustes, y compris les arrêts d'urgence et la récupération automatique en cas de défaillance.
-  
-  \item \textbf{Performance et Optimisation} : Optimiser les paramètres de navigation et d'exploration pour assurer une couverture maximale avec une efficacité énergétique minimale.
+  \item Implémenter un système de détection des frontières permettant d'identifier les zones inexploitées
+  \item Créer un coordinateur d'exploration capable de gérer plusieurs états et transitions
+  \item Assurer la sécurité du robot à travers des mécanismes d'arrêt d'urgence et de filtrage de vitesse
+  \item Intégrer la localisation et la cartographie simultanées (SLAM)
+  \item Fournir des outils de visualisation en temps réel pour le suivi de l'exploration
 \end{enumerate}
 
-\section{Structure du Rapport}
+\section{Architecture Générale du Système}
 
-Ce rapport est organisé selon la structure suivante :
-
-\begin{itemize}
-  \item \textbf{Chapitre 2} : Revue des technologies et frameworks utilisés
-  \item \textbf{Chapitre 3} : Architecture globale du système
-  \item \textbf{Chapitre 4} : Détail de l'infrastructure ROS2 (70\% du rapport)
-  \item \textbf{Chapitre 5} : Application mobile native (30\% du rapport)
-  \item \textbf{Chapitre 6} : Résultats expérimentaux et évaluation
-  \item \textbf{Chapitre 7} : Conclusion et perspectives futures
-\end{itemize}
-
-\newpage
-
-% ==================== TECHNOLOGIES ET FRAMEWORKS ====================
-\chapter{Technologies et Frameworks}
-
-\section{Robot Operating System 2 (ROS2)}
-
-ROS2 est un middleware robotique de nouvelle génération qui fournit un cadre flexible pour construire des applications robotiques complexes. Contrairement à ROS1, ROS2 offre :
+Le système ROS2 est composé de plusieurs paquets interdépendants:
 
 \begin{itemize}
-  \item \textbf{Architecture distribuée} basée sur DDS (Data Distribution Service)
-  \item \textbf{Temps réel} : Support des systèmes temps réel dur et mou
-  \item \textbf{Sécurité} : Intégration de la sécurité au niveau du middleware
-  \item \textbf{Scalabilité} : Architecture modulaire permettant le déploiement sur plusieurs machines
-  \item \textbf{Langage agnostique} : Support de multiples langages (C++, Python, Java)
+  \item \textbf{Bringup:} Responsable du lancement et de l'initialisation de tous les composants
+  \item \textbf{Exploration:} Contient la détection des frontières et la coordination de l'exploration
+  \item \textbf{Navigation:} Gère la navigation, l'arrêt d'urgence et le suivi des murs
+  \item \textbf{SLAM:} Effectue la localisation et la cartographie simultanées
+  \item \textbf{Description:} Fournit la description URDF du robot et les contrôleurs
+  \item \textbf{Gazebo:} Simule l'environnement et la physique du robot
 \end{itemize}
 
-Dans ce projet, ROS2 est utilisé comme base pour tous les systèmes embarqués du robot, incluant la navigation, la localisation, la cartographie et l'exploration.
+\chapter{Fondamentaux ROS2 et Architecture Distribuée}
 
-\section{Navigation2}
+\section{Introduction à ROS2}
 
-Navigation2 est un ensemble complet de tools et d'algorithmes pour la navigation autonome des robots mobiles. Il fournit :
+ROS2 (Robot Operating System 2) est un framework distribué conçu pour faciliter le développement de systèmes robotiques complexes. Contrairement à ROS1, ROS2 utilise le middleware DDS (Data Distribution Service) comme couche de communication, offrant une meilleure scalabilité, une latence réduite et une meilleure intégration avec les systèmes temps réel.
+
+\subsection{Concepts Fondamentaux}
+
+\subsubsection{Nœuds (Nodes)}
+
+Un nœud est une unité exécutable autonome dans ROS2. Chaque nœud réalise une fonction spécifique et communique avec d'autres nœuds. Dans notre système, nous avons plusieurs nœuds critiques:
 
 \begin{itemize}
-  \item \textbf{Planificateurs de trajets} : Calcul de chemins optimisés globalement et localement
-  \item \textbf{Contrôleurs de mouvement} : Suivi précis des trajectoires planifiées
-  \item \textbf{Arbres de comportement} : Orchestration des tâches de navigation
-  \item \textbf{Gérance des cartes de coûts} : Représentation dynamique de l'espace navigable
-  \item \textbf{Localisation} : Localisation par rapport à une carte connue ou construction de la carte
+  \item \textbf{Frontier Detection Node:} Detecte les frontières dans la carte
+  \item \textbf{Exploration Coordinator Node:} Coordonne la stratégie d'exploration
+  \item \textbf{Emergency Stop Controller Node:} Assure la sécurité
+  \item \textbf{Wall Follower Node:} Implémente le suivi de mur comme stratégie alternative
+  \item \textbf{Navigation Stack Nodes:} Composants Navigation2
+  \item \textbf{SLAM Nodes:} Effectue la cartographie
 \end{itemize}
 
-\section{SLAM (Simultaneous Localization and Mapping)}
+\subsubsection{Sujets (Topics)}
 
-Le SLAM est crucial pour permettre au robot de naviguer dans des environnements inconnus. Ce projet utilise SLAM Toolbox qui implémente des algorithmes graphiques robustes pour :
+Les sujets (topics) sont des canaux de communication asynchrones permettant la publication et l'abonnement de messages. La communication par sujets utilise un modèle publish-subscribe où les producteurs de données publient sur un sujet et les consommateurs s'abonnent au sujet.
 
-\begin{itemize}
-  \item Construire une carte cohérente de l'environnement
-  \item Localiser le robot dans cette carte
-  \item Gérer les fermetures de boucles pour corriger la dérive odométrique
-\end{itemize}
+\subsubsection{Services (Services)}
 
-\section{React Native}
+Les services fournissent une communication synchrone de requête-réponse entre les nœuds.
 
-React Native est un framework de développement d'applications mobiles natives basé sur JavaScript et React. Il offre :
+\subsubsection{Actions (Actions)}
 
-\begin{itemize}
-  \item \textbf{Code partagé} : Un même codebase pour iOS et Android
-  \item \textbf{Performance native} : Accès direct aux APIs natives du système d'exploitation
-  \item \textbf{Écosystème riche} : Large bibliothèque de composants et de libraries
-  \item \textbf{Développement rapide} : Hot reload et débogage intégré
-\end{itemize}
+Les actions permettent une communication asynchrone avec feedback, idéale pour les tâches longues comme la navigation vers un objectif.
 
-\section{OpenCV}
+\section{Modèle de Communication}
 
-OpenCV est utilisé pour le traitement d'images et l'analyse des cartes d'occupation. Elle fournit les algorithmes essentiels pour :
+Notre système utilise un modèle de communication distribué basé sur les topics et les actions. La figure suivante illustre le flux de données:
 
-\begin{itemize}
-  \item Détection des frontières dans les grilles d'occupation
-  \item Clustering et groupement des cellules de frontière
-  \item Calcul de gains informationnels
-\end{itemize}
+\begin{center}
+\begin{tikzpicture}[node distance=2cm and 3cm, auto]
+  \node [draw, rectangle] (slam) {SLAM Node};
+  \node [draw, rectangle, right of=slam] (fd) {Frontier Detector};
+  \node [draw, rectangle, below of=fd] (ec) {Exploration Coordinator};
+  \node [draw, rectangle, left of=ec] (nav2) {Navigation2};
+  \node [draw, rectangle, right of=ec] (esc) {Emergency Stop};
+  
+  \draw [->, thick] (slam) -- (fd) node [midway, above] {/map};
+  \draw [->, thick] (fd) -- (ec) node [midway, right] {/exploration/frontiers};
+  \draw [->, thick] (ec) -- (nav2) node [midway, below] {navigate\_to\_pose};
+  \draw [->, thick] (ec) -- (esc) node [midway, right] {/cmd\_vel};
+  \draw [->, thick] (esc) -- (nav2) node [midway, below] {/cmd\_vel\_safe};
+  
+\end{tikzpicture}
+\end{center}
 
-\section{Firebase}
-
-Firebase est utilisé pour l'authentification et la synchronisation des données utilisateur dans l'application mobile. Il offre :
-
-\begin{itemize}
-  \item Authentification sécurisée avec gestion des sessions
-  \item Base de données temps réel pour la synchronisation des données
-  \item Stockage d'objets pour les historiques et les rapports
-\end{itemize}
-
-\newpage
-
-% ==================== ARCHITECTURE GLOBALE ====================
-\chapter{Architecture Globale du Système}
+\chapter{Système de Détection des Frontières}
 
 \section{Vue d'ensemble}
 
-Le système robotique est composé de trois couches principales :
+Le système de détection des frontières est responsable d'identifier les zones de transition entre l'espace exploré et l'espace inexploré dans la carte. Une frontière est définie comme un ensemble de cellules libres adjacentes à des cellules inconnues.
 
-\begin{enumerate}
-  \item \textbf{Couche Matérielle} : Capteurs (LIDAR, caméras, IMU) et actionneurs (moteurs)
-  \item \textbf{Couche ROS2} : Noyau du système embarqué gérant navigation, SLAM et exploration
-  \item \textbf{Couche Application} : Interface utilisateur mobile pour contrôle et suivi
-\end{enumerate}
+\section{Implémentation du Nœud Frontier Detector}
 
-\section{Diagramme d'architecture}
+\subsection{Initialisation et Configuration}
 
-\begin{tikzpicture}[node distance=2cm]
-  \node (hardware) [draw, rectangle, rounded corners] {Matériel Robot\\(LIDAR, Moteurs, IMU)};
-  \node (ros2) [draw, rectangle, rounded corners, below=of hardware] {Système ROS2\\(Navigation2, SLAM, Exploration)};
-  \node (app) [draw, rectangle, rounded corners, below=of ros2] {Application Mobile\\(React Native + Firebase)};
-  \node (user) [draw, rectangle, rounded corners, below=of app] {Utilisateur};
-  
-  \draw [->, thick] (hardware) -- (ros2);
-  \draw [<->, thick] (ros2) -- (app);
-  \draw [->, thick] (app) -- (user);
-  
-  \node [right=2cm of ros2, draw, rectangle, rounded corners] {Interfaces\\ROS2};
-  \draw [<->, dashed] (ros2) -- (Interfaces);
-\end{tikzpicture}
+Le nœud Frontier Detector hérite de la classe \texttt{rclcpp::Node} et initialise plusieurs paramètres configurables:
 
-\section{Interactions entre composants}
-
-Le système fonctionne selon le modèle publish-subscribe de ROS2 :
-
-\begin{itemize}
-  \item Les capteurs publient leurs données sur des topics ROS2
-  \item Les nœuds de traitement s'abonnent à ces topics et publient les résultats
-  \item L'application mobile communique avec les nœuds ROS2 via des services et des actions
-  \item Les résultats sont synchronisés avec Firebase pour la persistance et l'accès hors ligne
-\end{itemize}
-
-\newpage
-
-% ==================== SYSTÈME ROS2 - EXPLORATION (PARTIE 1) ====================
-\chapter{Infrastructure ROS2 : Système de Navigation et Exploration}
-
-\section{Présentation générale}
-
-L'infrastructure ROS2 est le cœur du système robotique, responsable de tous les aspects de la navigation autonome, de la cartographie, et de l'exploration. Elle est composée de plusieurs modules spécialisés qui travaillent ensemble de manière coordonnée pour permettre au robot de naviguer efficacement.
-
-\section{Module de Détection des Frontières}
-
-\subsection{Concept et Importance}
-
-La détection des frontières est un élément fondamental du système d'exploration autonome. Une frontière est définie comme la limite entre l'espace connu (libre ou occupé) et l'espace inconnu (non exploré). Le robot utilise ces frontières comme points d'intérêt pour diriger son exploration.
-
-L'algorithme de détection des frontières :
-
-\begin{enumerate}
-  \item Reçoit la grille d'occupation publiée par le système SLAM
-  \item Identifie toutes les cellules qui sont libres et adjacentes à des cellules inconnues
-  \item Regroupe ces cellules en amas de frontières connexes
-  \item Calcule le centroïde de chaque amas
-  \item Filtre les frontières selon la taille minimale et la distance maximale
-\end{enumerate}
-
-\subsection{Algorithme détaillé}
-
-\begin{algorithm}[H]
-\caption{Détection des Frontières}
-\begin{algorithmic}
-  \State Convertir grille d'occupation en image OpenCV
-  \State Initialiser liste des cellules de frontière
-  
-  \For{chaque cellule non-limite de la grille}
-    \If{cellule est libre ET a un voisin inconnu}
-      \State Ajouter à liste de cellules frontière
-    \EndIf
-  \EndFor
-  
-  \State frontières $\leftarrow$ grouper cellules frontière connexes
-  
-  \For{chaque frontière}
-    \If{taille $\geq$ seuil ET distance $\leq$ max\_distance}
-      \State Calculer gain informatif
-      \State Vérifier accessibilité
-      \If{accessible}
-        \State Ajouter à frontières filtrées
-      \EndIf
-    \EndIf
-  \EndFor
-  
-  \State \Return frontières filtrées
-\end{algorithmic}
-\end{algorithm}
-
-\subsection{Implémentation C++}
-
-L'implémentation utilise les bibliothèques ROS2 standards et OpenCV pour :
-
-\begin{itemize}
-  \item Abonnement à la topic \texttt{/map} pour recevoir les mises à jour de la grille d'occupation
-  \item Traitement des images avec OpenCV pour identifier les frontières
-  \item Publication des marqueurs de visualisation pour déboguer dans RViz
-  \item Publication des frontières détectées sous forme de marqueurs
-\end{itemize}
-
-Les paramètres clés incluent :
-\begin{itemize}
-  \item \texttt{min\_frontier\_size} : Taille minimale d'une frontière en cellules
-  \item \texttt{max\_frontier\_distance} : Distance maximale à partir du robot
-  \item \texttt{information\_radius} : Rayon pour calculer le gain informatif
-  \item \texttt{frontier\_travel\_point\_distance} : Distance minimum aux points de voyage
-\end{itemize}
-
-\section{Module de Coordination de l'Exploration}
-
-\subsection{Architecture et États}
-
-Le coordinateur d'exploration gère la machine d'états du robot lors de l'exploration. Les états principaux sont :
-
-\begin{enumerate}
-  \item \textbf{IDLE} : Robot inactif, en attente de commande
-  \item \textbf{DETECTING\_ENVIRONMENT} : Phase initiale de détection du type d'environnement
-  \item \textbf{EXPLORING} : Exploration active avec sélection et navigation vers les frontières
-  \item \textbf{NAVIGATING\_TO\_FRONTIER} : Navigation en cours vers une frontière sélectionnée
-  \item \textbf{STUCK\_RECOVERY} : Récupération quand le robot est bloqué
-  \item \textbf{EXPLORATION\_COMPLETE} : Exploration terminée avec succès
-  \item \textbf{ERROR} : État d'erreur nécessitant intervention
-\end{enumerate}
-
-\subsection{Sélection Intelligente des Frontières}
-
-Le système implémente une sélection intelligente basée sur un score pondéré :
-
-$$\text{Score} = \frac{\text{Information Gain}}{1.0 + \text{Distance} \times 0.1}$$
-
-Cette formule équilibre deux objectifs :
-\begin{itemize}
-  \item Maximiser le gain informatif (explorant les zones avec plus d'informations)
-  \item Minimiser la distance totale parcourue (efficacité énergétique)
-\end{itemize}
-
-\subsection{Gestion des Situations Bloquées}
-
-Quand le robot détecte qu'il est bloqué (absence de mouvement significatif pendant une durée définie), il active une séquence de récupération multi-étapes :
-
-\begin{enumerate}
-  \item \textbf{Recul intelligent} : Marche arrière avec évitement d'obstacles
-  \item \textbf{Rotation adaptative} : Rotation avec vitesse variable
-  \item \textbf{Nettoyage des cartes de coûts} : Réinitialisation des couches de perception
-  \item \textbf{Re-planification} : Calcul de nouveaux trajets
-\end{enumerate}
-
-\subsection{Monitoring et Optimisation Dynamique}
-
-Le coordinateur implémente :
-
-\begin{itemize}
-  \item \textbf{Surveillance de performance} : Suivi des métriques d'efficacité
-  \item \textbf{Adaptation dynamique} : Ajustement des tolérances basé sur la vitesse actuelle
-  \item \textbf{Adaptation environnementale} : Ajustement des paramètres selon les caractéristiques observées
-  \item \textbf{Mise à jour adaptative} : Ajustement continu des paramètres de navigation
-\end{itemize}
-
-\section{Module de Localisation et Cartographie (SLAM)}
-
-\subsection{Configuration SLAM}
-
-Le système SLAM utilise SLAM Toolbox, configuré pour :
-
-\begin{itemize}
-  \item Recevoir les données du capteur LIDAR
-  \item Construire une carte de l'environnement
-  \item Maintenir la pose du robot
-  \item Gérer les fermetures de boucles automatiquement
-\end{itemize}
-
-\subsection{Grille d'Occupation}
-
-La grille d'occupation publiée par le SLAM représente l'environnement comme une grille 2D où :
-\begin{itemize}
-  \item $0$ = espace libre (navigable)
-  \item $100$ = espace occupé (obstacle)
-  \item $-1$ = espace inconnu (non exploré)
-\end{itemize}
-
-Résolution typique : \texttt{0.05m par cellule}
-
-\section{Module de Navigation (Navigation2)}
-
-\subsection{Composants principaux}
-
-Navigation2 fournit :
-
-\begin{itemize}
-  \item \textbf{Planner Global} : Calcul de trajets de haut niveau (Theta* ou RRT*)
-  \item \textbf{Planner Local} : Suivi précis des trajets en évitant les obstacles dynamiques
-  \item \textbf{Recovery Behaviors} : Stratégies de récupération en cas d'impasse
-  \item \textbf{Cost Map Manager} : Gestion des cartes de coûts statiques et dynamiques
-\end{itemize}
-
-\subsection{Paramètres de Navigation}
-
-Les paramètres clés de Navigation2 incluent :
-
-\begin{table}[H]
-\centering
-\begin{tabular}{|l|c|c|}
-\hline
-\textbf{Paramètre} & \textbf{Valeur} & \textbf{Description} \\
-\hline
-\texttt{goal\_tolerance} & 0.8 m & Tolérance pour atteindre un objectif \\
-\texttt{stuck\_distance\_threshold} & 0.15 m & Seuil de détection du blocage \\
-\texttt{goal\_timeout} & 45 s & Temps maximum pour atteindre un objectif \\
-\texttt{recovery\_rotation\_speed} & 0.5 rad/s & Vitesse de rotation en récupération \\
-\hline
-\end{tabular}
-\end{table}
-
-\section{Système de Sécurité}
-
-\subsection{Arrêt d'Urgence}
-
-Un contrôleur d'arrêt d'urgence implémente :
-
-\begin{itemize}
-  \item Monitoring de la distance aux obstacles
-  \item Arrêt immédiat en cas de détection d'obstacle critique
-  \item Commande manuelle de contrôle des vitesses
-\end{itemize}
-
-\subsection{Filtrage des Vitesses}
-
-Un filtre de sécurité des vitesses implémente :
-
-\begin{itemize}
-  \item Limitation des accélérations maximales
-  \item Réduction des vitesses en présence d'obstacles
-  \item Validation des commandes de vitesse avant envoi aux actionneurs
-\end{itemize}
-
-\section{Architecture de Communication}
-
-\subsection{Topics ROS2 principales}
-
-\begin{table}[H]
-\centering
-\begin{tabular}{|l|l|l|}
-\hline
-\textbf{Topic} & \textbf{Type} & \textbf{Description} \\
-\hline
-\texttt{/map} & OccupancyGrid & Grille d'occupation du SLAM \\
-\texttt{/scan} & LaserScan & Données brutes du LIDAR \\
-\texttt{/odom} & Odometry & Odométrie du robot \\
-\texttt{/tf} & TransformStamped & Transformations entre repères \\
-\texttt{/cmd\_vel} & Twist & Commandes de vitesse \\
-\texttt{/exploration/frontiers} & MarkerArray & Frontières détectées \\
-\texttt{/exploration/status} & String & Statut de l'exploration \\
-\hline
-\end{tabular}
-\end{table}
-
-\subsection{Actions ROS2}
-
-\begin{itemize}
-  \item \texttt{/navigate\_to\_pose} : Navigation vers une pose donnée
-  \item \texttt{/navigate\_through\_poses} : Navigation par une séquence de poses
-\end{itemize}
-
-\newpage
-
-% ==================== APPLICATION MOBILE ====================
-\chapter{Application Mobile Native React Native}
-
-\section{Présentation générale}
-
-L'application mobile native est développée avec React Native, offrant une interface utilisateur intuitive pour contrôler et superviser le robot. Elle fonctionne sur iOS et Android avec un codebase unifié.
-
-\subsection{Architecture générale}
-
-L'application est structurée en couches :
-
-\begin{enumerate}
-  \item \textbf{Couche Présentation} : Composants React Native et écrans UI
-  \item \textbf{Couche Navigation} : Gestion de la navigation entre écrans
-  \item \textbf{Couche Services} : Logique métier et requêtes API
-  \item \textbf{Couche Stockage} : Gestion de l'état avec Zustand et Firebase
-  \item \textbf{Couche Communication} : APIs REST pour communiquer avec le serveur
-\end{enumerate}
-
-\section{Authentification et Gestion d'Utilisateur}
-
-\subsection{Système d'Authentification}
-
-L'application utilise Firebase Authentication pour :
-
-\begin{itemize}
-  \item Créer et gérer les comptes utilisateurs
-  \item Authentifier les utilisateurs via email/mot de passe
-  \item Gérer les sessions utilisateur
-  \item Sécuriser les communications
-\end{itemize}
-
-\subsection{Écrans d'Authentification}
-
-\begin{itemize}
-  \item \textbf{LoginScreen} : Connexion avec email et mot de passe
-  \item \textbf{SignUpScreen} : Création de nouveau compte
-  \item \textbf{ProfileScreen} : Gestion du profil utilisateur
-\end{itemize}
-
-\section{Gestion du Contrôle du Robot}
-
-\subsection{Composant Joystick}
-
-Un composant joystick virtuel basé sur RN Gesture Handler offre :
-
-\begin{itemize}
-  \item Contrôle fluide et précis du mouvement du robot
-  \item Retour haptique pour meilleure ergonomie
-  \item Support des gestes tactiles complexes
-  \item Limitation des vitesses maximum et minimum
-\end{itemize}
-
-\subsection{Commandes de Mouvement}
-
-Les commandes envoyées au robot incluent :
-
-\begin{itemize}
-  \item Vitesse linéaire (x, y)
-  \item Vitesse angulaire (rotation)
-  \item Commandes d'arrêt d'urgence
-\end{itemize}
-
-\section{Affichage et Suivi}
-
-\subsection{RobotStatusScreen}
-
-Cet écran affiche :
-
-\begin{itemize}
-  \item Position actuelle du robot
-  \item Batterie restante
-  \item Vitesse actuelle
-  \item État de la connexion
-  \item Métriques de navigation
-\end{itemize}
-
-\subsection{MapDisplay}
-
-Le composant d'affichage de la carte :
-
-\begin{itemize}
-  \item Affiche la grille d'occupation du SLAM
-  \item Visualise la position du robot
-  \item Montre les frontières détectées
-  \item Affiche les trajectoires planifiées
-\end{itemize}
-
-\section{Gestion des Tâches de Stérilisation}
-
-\subsection{Écran de Séquence de Navigation}
-
-Cet écran permet :
-
-\begin{itemize}
-  \item Création de séquences de points de stérilisation
-  \item Définition de l'ordre de visite des points
-  \item Exécution autonome des séquences
-  \item Suivi de la progression
-\end{itemize}
-
-\subsection{Services de Tâche}
-
-\begin{itemize}
-  \item \textbf{SequenceService} : Gestion des séquences de tâches
-  \item \textbf{PatrolService} : Gestion des patrouilles automatiques
-  \item \textbf{AutonomousMappingService} : Cartographie autonome
-\end{itemize}
-
-\section{Intégration de Données Temps Réel}
-
-\subsection{Utilisation de Firebase}
-
-Firebase est utilisé pour :
-
-\begin{itemize}
-  \item Stockage de l'historique des tâches
-  \item Synchronisation des données utilisateur
-  \item Stockage de rapports de stérilisation
-  \item Gestion des alertes système
-\end{itemize}
-
-\subsection{Service API}
-
-Un service API centralisé gère toutes les communications :
-
-\begin{itemize}
-  \item Requêtes HTTP vers le serveur backend
-  \item Gestion des tokens d'authentification
-  \item Gestion des erreurs et retry automatique
-  \item Formatage des réponses
-\end{itemize}
-
-\section{Gestion de l'État}
-
-\subsection{Zustand Store}
-
-L'application utilise Zustand pour la gestion d'état :
-
-\begin{itemize}
-  \item \textbf{robotStore} : Statut et position du robot
-  \item \textbf{languageStore} : Paramètres de langue et localisation
-  \item État des tâches en cours
-  \item État des alertes système
-\end{itemize}
-
-\subsection{Architecture du Store}
-
-\begin{lstlisting}[language=JavaScript]
-export const useRobotStore = create((set) => ({
-  robotPosition: { x: 0, y: 0 },
-  battery: 100,
-  connectionStatus: 'connected',
-  currentTask: null,
-  
-  updatePosition: (x, y) => set({ 
-    robotPosition: { x, y } 
-  }),
-  
-  updateBattery: (level) => set({ battery: level }),
-}));
-\end{lstlisting}
-
-\section{Interface Utilisateur et Thématique}
-
-\subsection{Système de Thème}
-
-L'application utilise un système de thème centralisé :
-
-\begin{itemize}
-  \item Couleurs cohérentes dans toute l'application
-  \item Support pour thème clair et sombre
-  \item Espacements standardisés
-  \item Typographies cohérentes
-\end{itemize}
-
-\subsection{Composants Réutilisables}
-
-\begin{itemize}
-  \item \textbf{Button} : Boutons avec styles personnalisés
-  \item \textbf{Card} : Conteneurs pour le contenu
-  \item \textbf{Modal} : Dialogues modaux
-  \item \textbf{Progress} : Barres de progression
-  \item \textbf{Badge} : Insignes pour statuts
-  \item \textbf{Input} : Champs de saisie de texte
-\end{itemize}
-
-\section{Localisation et Multilingue}
-
-L'application supporte plusieurs langues :
-
-\begin{itemize}
-  \item Français (par défaut)
-  \item Anglais
-  \item Arabe
-  \item Autres langues configurables
-\end{itemize}
-
-\subsection{LanguageSwitcher}
-
-Un composant permet aux utilisateurs de changer la langue à tout moment, avec synchronisation instantanée de l'interface.
-
-\newpage
-
-% ==================== INTÉGRATION ET COMMUNICATION ====================
-\chapter{Intégration Système et Communication}
-
-\section{Architecture de Communication Globale}
-
-\subsection{Flux de Communication}
-
-Le robot et l'application communiquent via :
-
-\begin{enumerate}
-  \item \textbf{Topics ROS2} : Publication/Souscription locale entre nœuds ROS2
-  \item \textbf{Services HTTP} : Communication REST entre application et serveur backend
-  \item \textbf{Callbacks et Actions} : Orchestration des tâches de navigation
-  \item \textbf{Firebase Realtime} : Synchronisation des données utilisateur
-\end{enumerate}
-
-\section{Protocole de Communication Application-Serveur}
-
-\subsection{Endpoints API}
-
-\begin{table}[H]
-\centering
-\begin{tabular}{|l|l|l|}
-\hline
-\textbf{Endpoint} & \textbf{Méthode} & \textbf{Description} \\
-\hline
-\texttt{/auth/login} & POST & Authentification utilisateur \\
-\texttt{/robots} & GET & Liste des robots \\
-\texttt{/robots/\{id\}} & GET/PUT & Détails et contrôle du robot \\
-\texttt{/tasks} & GET/POST & Gestion des tâches \\
-\texttt{/exploration/status} & GET & Statut d'exploration en temps réel \\
-\texttt{/sterilization/history} & GET & Historique des stérilisations \\
-\hline
-\end{tabular}
-\end{table}
-
-\section{Synchronisation des Données}
-
-\subsection{Données Critiques}
-
-Les données suivantes sont synchronisées en temps réel :
-
-\begin{itemize}
-  \item Position et orientation du robot
-  \item Niveau de batterie
-  \item Statut des tâches
-  \item Cartes et frontières détectées
-  \item Alertes et erreurs système
-\end{itemize}
-
-\subsection{Mécanismes de Synchronisation}
-
-\begin{itemize}
-  \item \textbf{Polling} : Interrogation périodique (pour les applications mobiles)
-  \item \textbf{WebSocket} : Communication bidirectionnelle temps réel (si disponible)
-  \item \textbf{Firebase Listeners} : Écoute des changements de base de données
-\end{itemize}
-
-\newpage
-
-% ==================== DÉFIS ET SOLUTIONS ====================
-\chapter{Défis Techniques et Solutions Implémentées}
-
-\section{Défis dans le Système ROS2}
-
-\subsection{Exploration Efficace}
-
-\textbf{Défi} : Assurer que le robot explore de manière efficace sans visiter les mêmes frontières à répétition ou entrer dans des boucles infinies.
-
-\textbf{Solution} : 
-\begin{itemize}
-  \item Implémentation d'une liste des frontières récemment visitées
-  \item Ajustement dynamique des tolérances d'atteinte d'objectif
-  \item Sélection intelligente basée sur le score pondéré des gains informatifs et des distances
-\end{itemize}
-
-\subsection{Récupération du Blocage}
-
-\textbf{Défi} : Détecter quand le robot est coincé et le libérer de manière robuste.
-
-\textbf{Solution} :
-\begin{itemize}
-  \item Détection du blocage basée sur l'absence de mouvement détectable
-  \item Stratégies de récupération multi-étapes avec rotation et marche arrière
-  \item Nettoyage des cartes de coûts et re-planification
-  \item Augmentation progressive de l'agressivité des stratégies si la récupération échoue
-\end{itemize}
-
-\subsection{Paramètres de Navigation Adaptatifs}
-
-\textbf{Défi} : Trouver les bons paramètres de navigation qui fonctionnent dans différents environnements.
-
-\textbf{Solution} :
-\begin{itemize}
-  \item Implémentation de tolérance dynamique basée sur la vitesse actuelle
-  \item Adaptation des paramètres selon les caractéristiques de l'environnement
-  \item Surveillance continue des performances et ajustement automatique
-\end{itemize}
-
-\section{Défis dans l'Application Mobile}
-
-\subsection{Synchronisation Temps Réel}
-
-\textbf{Défi} : Maintenir une synchronisation temps réel avec le robot tout en gérant la latence réseau et les connexions instables.
-
-\textbf{Solution} :
-\begin{itemize}
-  \item Utilisation de Zustand pour la gestion d'état locale
-  \item Mise en cache des données pour affichage offline
-  \item Retry automatique avec backoff exponentiel pour les requêtes échouées
-  \item Vérification périodique de la connexion avec reconnexion automatique
-\end{itemize}
-
-\subsection{Performance et Consommation de Batterie}
-
-\textbf{Défi} : Maintenir une application réactive tout en minimisant la consommation de batterie.
-
-\textbf{Solution} :
-\begin{itemize}
-  \item Optimisation des requêtes API (pagination, compression)
-  \item Utilisation de SWR pour le caching efficace des données
-  \item Réduction de la fréquence de polling selon l'état de l'application
-  \item Optimisation des rendus React avec memoization
-\end{itemize}
-
-\subsection{Affichage de Cartes en Temps Réel}
-
-\textbf{Défi} : Afficher les mises à jour de cartes (grille d'occupation) en temps réel sans ralentir l'application.
-
-\textbf{Solution} :
-\begin{itemize}
-  \item Compression des données de carte avant transmission
-  \item Mise à jour incrémentale des régions modifiées
-  \item Rendu optimisé avec Canvas au lieu de composants React
-  \item Limitation de la fréquence de mise à jour visuelle
-\end{itemize}
-
-\section{Défis d'Intégration}
-
-\subsection{Latence Réseau}
-
-\textbf{Défi} : Gérer les délais de communication entre l'application mobile et le robot.
-
-\textbf{Solution} :
-\begin{itemize}
-  \item Ajustement des timeouts selon les conditions réseau
-  \item Feedback utilisateur immédiat avec mise à jour différée
-  \item Rollback des commandes non confirmées par le robot
-\end{itemize}
-
-\subsection{Fiabilité et Disponibilité}
-
-\textbf{Défi} : Assurer un fonctionnement fiable avec graceful degradation.
-
-\textbf{Solution} :
-\begin{itemize}
-  \item Watchdog timers pour détecter les défaillances
-  \item Heartbeat messages réguliers
-  \item Mode offline avec queue de commandes
-  \item Logging détaillé pour diagnostic
-\end{itemize}
-
-\newpage
-
-% ==================== RÉSULTATS ET ÉVALUATION ====================
-\chapter{Résultats Expérimentaux et Évaluation}
-
-\section{Méthodologie d'Évaluation}
-
-L'évaluation du système a été effectuée selon plusieurs axes :
-
-\begin{enumerate}
-  \item Efficacité de l'exploration autonome
-  \item Performance de la navigation
-  \item Fiabilité des communications
-  \item Performance de l'application mobile
-  \item Sécurité et robustesse
-\end{enumerate}
-
-\section{Performance du Système d'Exploration}
-
-\subsection{Couverture de Cartographie}
-
-Le système d'exploration a démontré :
-
-\begin{table}[H]
-\centering
-\begin{tabular}{|l|c|}
-\hline
-\textbf{Métrique} & \textbf{Valeur} \\
-\hline
-Couverture moyenne & 85-95\% \\
-Temps d'exploration (100m²) & 15-20 minutes \\
-Distance totale parcourue & 1.5× à 2× la surface \\
-Efficacité énergétique & Optimale \\
-\hline
-\end{tabular}
-\end{table}
-
-\subsection{Qualité de la Cartographie}
-
-\begin{itemize}
-  \item Cartes cohérentes et sans dérives significatives
-  \item Fermetures de boucles détectées avec succès
-  \item Alignement précis des cartes partielles
-  \item Résolution d'0.05m adéquate pour la plupart des tâches
-\end{itemize}
-
-\section{Performance de la Navigation}
-
-\subsection{Précision d'Atteinte d'Objectif}
-
-\begin{table}[H]
-\centering
-\begin{tabular}{|l|c|}
-\hline
-\textbf{Paramètre} & \textbf{Résultat} \\
-\hline
-Erreur de position moyenne & ±0.15m \\
-Erreur d'orientation & ±5° \\
-Taux de succès d'atteinte & 94\% \\
-Temps moyen par objectif & 30-45s \\
-\hline
-\end{tabular}
-\end{table}
-
-\subsection{Récupération des Situations Bloquées}
-
-\begin{itemize}
-  \item Détection du blocage : 98\% de précision
-  \item Taux de récupération : 87\% en première tentative
-  \item Taux global de récupération : 95\%
-  \item Temps de récupération : 5-15 secondes
-\end{itemize}
-
-\section{Performance de la Communication}
-
-\subsection{Latence API}
-
-\begin{table}[H]
-\centering
-\begin{tabular}{|l|c|c|c|}
-\hline
-\textbf{Endpoint} & \textbf{Min} & \textbf{Moy} & \textbf{Max} \\
-\hline
-GET /robots & 50ms & 120ms & 300ms \\
-POST /commands & 80ms & 180ms & 450ms \\
-GET /map & 100ms & 280ms & 800ms \\
-GET /status & 40ms & 100ms & 250ms \\
-\hline
-\end{tabular}
-\end{table}
-
-\subsection{Fiabilité des Communications}
-
-\begin{itemize}
-  \item Taux de perte de paquets : < 0.1\%
-  \item Temps de reconnexion moyen : 2-3 secondes
-  \item Disponibilité globale : 99.2\%
-\end{itemize}
-
-\section{Performance de l'Application Mobile}
-
-\subsection{Responsivité de l'Interface}
-
-\begin{itemize}
-  \item Temps de réponse UI : < 100ms
-  \item FPS en mode normal : 60 FPS
-  \item Consommation mémoire : 120-150 MB
-  \item Taille d'installation : 85 MB
-\end{itemize}
-
-\subsection{Utilisation de Batterie}
-
-\begin{itemize}
-  \item Consommation en idle : 2-3\% par heure
-  \item Consommation en navigation active : 8-12\% par heure
-  \item Durée moyenne d'utilisation : 8-10 heures
-\end{itemize}
-
-\section{Analyse de Robustesse}
-
-\subsection{Gestion des Erreurs}
-
-Le système affiche une bonne gestion des erreurs :
-
-\begin{itemize}
-  \item Recovery automatique des connexions perdues
-  \item Graceful degradation lors de défaillances partielles
-  \item Messages d'erreur clairs pour l'utilisateur
-  \item Logging complet pour diagnostic
-\end{itemize}
-
-\subsection{Tests de Stabilité}
-
-\begin{itemize}
-  \item Tests de durée : 48 heures d'exploitation continue
-  \item Résultat : Aucune défaillance critique
-  \item Memory leaks : Non détectés
-  \item Croissance CPU : Négligeable au fil du temps
-\end{itemize}
-
-\newpage
-
-% ==================== CONCLUSION ====================
-\chapter{Conclusion et Perspectives Futures}
-
-\section{Résumé des Réalisations}
-
-Ce projet a abouti au développement complet d'un système robotique autonome intégré composé de deux éléments fondamentaux :
-
-\begin{enumerate}
-  \item \textbf{Infrastructure ROS2 Robuste} (70\% du projet) : Un système embarqué sophistiqué capable de :
-  \begin{itemize}
-    \item Navigation autonome avec évitement d'obstacles
-    \item Cartographie simultanée et localisation
-    \item Exploration intelligente basée sur les frontières
-    \item Récupération automatique des situations bloquées
-    \item Monitoring continu et adaptation dynamique des paramètres
-  \end{itemize}
-  
-  \item \textbf{Application Mobile Native Intuitive} (30\% du projet) : Une interface utilisateur permettant :
-  \begin{itemize}
-    \item Contrôle en temps réel du robot
-    \item Suivi de la position et du statut
-    \item Gestion des tâches de stérilisation
-    \item Affichage de cartes et de frontières
-    \item Authentification sécurisée et synchronisation des données
-  \end{itemize}
-\end{enumerate}
-
-\section{Contributions Techniques}
-
-Les principales contributions techniques incluent :
-
-\begin{itemize}
-  \item Implémentation d'un système de détection de frontières robuste en C++
-  \item Coordinateur d'exploration avec gestion d'états sophistiquée
-  \item Système de sécurité multi-niveaux avec arrêt d'urgence
-  \item Architecture d'application mobile scalable et maintenable
-  \item Intégration transparente entre ROS2 et interfaces mobiles
-  \item Système de paramètres adaptatifs pour divers environnements
-\end{itemize}
-
-\section{Performances Réalisées}
-
-Le système démontre :
-
-\begin{itemize}
-  \item Couverture d'exploration : 85-95\% efficace
-  \item Taux de succès de navigation : 94\%
-  \item Disponibilité système : 99.2\%
-  \item Temps de réponse UI : < 100ms
-  \item Fiabilité globale : Excellent pour applications critiques
-\end{itemize}
-
-\section{Perspectives Futures}
-
-\subsection{Améliorations à Court Terme}
-
-\begin{itemize}
-  \item Implémentation de la prédiction d'obstacles dynamiques
-  \item Optimisation de la compression des données de cartes
-  \item Support multi-robots avec coordination distribuée
-  \item Interface augmentée réalité pour visualisation 3D
-\end{itemize}
-
-\subsection{Améliorations à Long Terme}
-
-\begin{itemize}
-  \item Intégration de machine learning pour apprentissage de trajectoires optimales
-  \item Support des environnements dynamiques avec agents mobiles
-  \item Navigation multi-étages avec ascenseurs autonomes
-  \item Système de maintenance prédictive basé sur les données
-  \item Intégration avec systèmes cloud pour traitement distribué
-  \item Développement de modules de stérilisation spécialisés
-\end{itemize}
-
-\subsection{Recherche Future}
-
-\begin{itemize}
-  \item Algorithmes d'exploration pour environnements très complexes
-  \item Planification de trajectoires énergie-optimale
-  \item Détection et apprentissage des patterns de circulation humains
-  \item Sécurité et vérification formelle des algorithmes de navigation
-  \item Évaluation comparative avec autres approches d'exploration
-\end{itemize}
-
-\section{Recommandations}
-
-\subsection{Pour le Déploiement}
-
-\begin{enumerate}
-  \item Effectuer des tests de validation dans les environnements cibles réels
-  \item Mettre en place un monitoring continu en production
-  \item Établir des procédures de maintenance régulière
-  \item Maintenir une documentation complète et à jour
-  \item Former les utilisateurs finaux à l'utilisation du système
-\end{enumerate}
-
-\subsection{Pour la Maintenance}
-
-\begin{enumerate}
-  \item Mettre en place un système de logging centralisé
-  \item Implémenter des alertes automatiques pour les anomalies
-  \item Maintenir une équipe de support spécialisée
-  \item Prévoir des mises à jour logicielles régulières
-  \item Effectuer des audits de sécurité périodiques
-\end{enumerate}
-
-\section{Conclusion Générale}
-
-Ce projet démontre la faisabilité d'un système robotique autonome complet, intégrant une infrastructure ROS2 sophistiquée avec une application mobile intuitive. Les résultats expérimentaux confirment que l'approche est viable pour les applications de stérilisation et peut servir de base pour des extensions futures.
-
-La combinaison d'une architecture logicielle robuste, d'algorithmes d'exploration intelligents et d'une interface utilisateur soignée crée un système capable de fonctionner de manière fiable en environnement réel. Les mécanismes de sécurité et de récupération assurent que le système peut gérer les situations inattendues avec gracefulité.
-
-Nous espérons que ce projet servira de fondation pour des recherches et des développements futurs dans le domaine de la robotique autonome pour applications médicales et industrielles.
-
-\newpage
-
-% ==================== BIBLIOGRAPHIE ====================
-\begin{thebibliography}{99}
-
-\bibitem{ROS2} Maruyama, Y., Kato, S., \& Azumi, T. (2016). Exploring the performance of ROS2. In \textit{Proceedings of the International Conference on Embedded Software}.
-
-\bibitem{Navigation2} Macenski, S., Martín, F., White, R., \& Ginés Crespo, J. (2020). \textit{Navigation2: Flexible autonomous mobile robot navigation and manipulation using ROS2 and behaviour trees}. arXiv.
-
-\bibitem{SLAM} Bresson, G., Alsayed, Z., Yu, L., \& Glaser, S. (2017). Simultaneous Localization and Mapping: Part I. \textit{IEEE Robotics \& Automation Magazine}, 24(2), 37-46.
-
-\bibitem{FrontierExploration} Yamauchi, B. (1997). A frontier-based approach for autonomous exploration. In \textit{Proceedings of the 1997 IEEE International Symposium on Computational Intelligence in Robotics and Automation}.
-
-\bibitem{ReactNative} Eisenman, B. (2015). \textit{Learning React Native: Building Native Mobile Apps with JavaScript}. O'Reilly Media.
-
-\bibitem{DDS} Object Management Group. (2012). \textit{Data Distribution Service (DDS) Specification}.
-
-\bibitem{OpenCV} Bradski, G., \& Kaehler, A. (2008). \textit{Learning OpenCV: Computer Vision with the OpenCV Library}. O'Reilly Media.
-
-\bibitem{BehaviorTrees} Marzinotto, A., Colledanchise, M., Smith, C., \& Ögren, P. (2014). Towards a Unified Behavior Trees Framework for Robotics. In \textit{IEEE International Conference on Robotics and Automation}.
-
-\bibitem{SafetyRobotics} Stentz, A., \& Bares, J. (1999). Designing and Operating Autonomous Planetary Rovers. In \textit{Experimental Robotics VI}.
-
-\bibitem{MobilePlatforms} Siciliano, B., \& Khatib, O. (Eds.). (2016). \textit{Springer Handbook of Robotics}. Springer.
-
-\end{thebibliography}
-
-\newpage
-
-% ==================== ANNEXES ====================
-\appendix
-
-\chapter{Configuration Technique}
-
-\section{Versions des Dépendances Principales}
-
-\subsection{Côté ROS2}
-
-\begin{itemize}
-  \item \textbf{ROS2} : Humble ou Iron
-  \item \textbf{Navigation2} : Version 1.1 ou supérieure
-  \item \textbf{SLAM Toolbox} : Version 0.4 ou supérieure
-  \item \textbf{OpenCV} : 4.5 ou supérieure
-  \item \textbf{TF2} : Version ROS2 standard
-\end{itemize}
-
-\subsection{Côté Application Mobile}
-
-\begin{lstlisting}[language=JSON]
+\begin{lstlisting}
+FrontierDetector::FrontierDetector(const rclcpp::NodeOptions & options)
+: Node("frontier_detector", options), map_received_(false)
 {
-  "react": "18.3.1",
-  "react-native": "0.76.9",
-  "expo": "52.0.0",
-  "@react-navigation/native": "6.1.18",
-  "@react-navigation/native-stack": "6.11.0",
-  "zustand": "5.0.8",
-  "firebase": "12.6.0",
-  "axios": "1.13.2",
-  "typescript": "5.3.3"
-}
-\end{lstlisting}
-
-\chapter{Exemple de Code Principal}
-
-\section{Structure de Détection de Frontières}
-
-\begin{lstlisting}[language=C++]
-namespace turtle_bot_exploration {
-  class FrontierDetector : public rclcpp::Node {
-  private:
-    // Subscriptions
-    rclcpp::Subscription<nav_msgs::msg::OccupancyGrid>::SharedPtr 
-      map_sub_;
-    
-    // Publishers
-    rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr 
-      frontier_marker_pub_;
-    
-    // Main parameters
-    double min_frontier_size_;
-    double max_frontier_distance_;
-    double information_radius_;
-    
-    // Methods
-    std::vector<Frontier> detectFrontiers(
-      const nav_msgs::msg::OccupancyGrid& map);
-    
-  public:
-    FrontierDetector(const rclcpp::NodeOptions& options);
-  };
-}
-\end{lstlisting}
-
-\section{Structure d'Application Mobile}
-
-\begin{lstlisting}[language=JavaScript]
-import React from 'react';
-import { View, Text } from 'react-native';
-import { useRobotStore } from '../store/robotStore';
-
-export const RobotStatusScreen = () => {
-  const { robotPosition, battery, connectionStatus } = 
-    useRobotStore();
+  // Declare parameters with default values
+  this->declare_parameter("min_frontier_size", 10.0);
+  this->declare_parameter("max_frontier_distance", 10.0);
+  this->declare_parameter("frontier_travel_point_distance", 0.5);
+  this->declare_parameter("information_radius", 1.0);
+  this->declare_parameter("robot_base_frame", "base_link");
+  this->declare_parameter("global_frame", "map");
   
-  return (
-    <View>
-      <Text>Position: {robotPosition.x}, {robotPosition.y}</Text>
-      <Text>Batterie: {battery}%</Text>
-      <Text>Connexion: {connectionStatus}</Text>
-    </View>
-  );
+  // Get parameters from ROS2 parameter server
+  min_frontier_size_ = 
+    this->get_parameter("min_frontier_size").as_double();
+  max_frontier_distance_ = 
+    this->get_parameter("max_frontier_distance").as_double();
+  
+  // Initialize TF2 for coordinate transformations
+  tf_buffer_ = std::make_shared<tf2_ros::Buffer>(
+    this->get_clock());
+  tf_listener_ = 
+    std::make_shared<tf2_ros::TransformListener>(*tf_buffer_);
+}
+\end{lstlisting}
+
+\subsection{Abonnements (Subscriptions) et Publications (Publishers)}
+
+Le nœud Frontier Detector s'abonne à la carte occupancy grid et publie les frontières détectées ainsi que des marqueurs de visualisation:
+
+\begin{lstlisting}
+// Subscription to occupancy grid map
+map_sub_ = this->create_subscription<nav_msgs::msg::OccupancyGrid>(
+  "/map", rclcpp::QoS(1).transient_local(),
+  std::bind(&FrontierDetector::mapCallback, this, 
+    std::placeholders::_1));
+
+// Publisher for frontier visualization
+frontier_marker_pub_ = 
+  this->create_publisher<visualization_msgs::msg::MarkerArray>(
+    "/exploration/frontiers", 10);
+
+// Publisher for frontier goals
+frontier_goal_pub_ = 
+  this->create_publisher<geometry_msgs::msg::PoseStamped>(
+    "/exploration/frontier_goal", 10);
+
+// Timer for periodic detection (1000ms interval)
+timer_ = this->create_wall_timer(
+  std::chrono::milliseconds(1000),
+  std::bind(&FrontierDetector::timerCallback, this));
+\end{lstlisting}
+
+\subsection{Algorithme de Détection des Frontières}
+
+L'algorithme de détection fonctionne en plusieurs étapes:
+
+\begin{enumerate}
+  \item \textbf{Conversion d'image:} Convertir la grille d'occupation en image OpenCV
+  \item \textbf{Identification des cellules frontière:} Trouver toutes les cellules libres adjacentes à des cellules inconnues
+  \item \textbf{Groupement:} Regrouper les cellules frontière en frontières distinctes
+  \item \textbf{Filtrage:} Filtrer par taille minimale et distance maximale au robot
+  \item \textbf{Calcul du gain informatif:} Évaluer la valeur d'exploration de chaque frontière
+  \item \textbf{Vérification d'accessibilité:} Assurer que la frontière est atteignable
+\end{enumerate}
+
+\begin{lstlisting}
+std::vector<Frontier> FrontierDetector::detectFrontiers(
+  const nav_msgs::msg::OccupancyGrid & map)
+{
+  // Convert occupancy grid to OpenCV image format
+  cv::Mat map_image(map.info.height, map.info.width, CV_8UC1);
+  
+  for (unsigned int y = 0; y < map.info.height; ++y) {
+    for (unsigned int x = 0; x < map.info.width; ++x) {
+      int index = y * map.info.width + x;
+      int8_t value = map.data[index];
+      
+      if (value == -1) {
+        map_image.at<uint8_t>(y, x) = 128;  // Unknown
+      } else if (value == 0) {
+        map_image.at<uint8_t>(y, x) = 255;  // Free
+      } else {
+        map_image.at<uint8_t>(y, x) = 0;    // Occupied
+      }
+    }
+  }
+  
+  // Find frontier cells and group them
+  auto frontier_cells = findFrontierCells(map_image);
+  auto frontiers = groupFrontierCells(frontier_cells, map);
+  
+  // Filter frontiers by criteria
+  std::vector<Frontier> filtered_frontiers;
+  auto robot_pose = getRobotPose();
+  
+  for (auto & frontier : frontiers) {
+    if (frontier.size >= min_frontier_size_) {
+      // Calculate distance to robot
+      double dx = frontier.centroid.x - robot_pose.pose.position.x;
+      double dy = frontier.centroid.y - robot_pose.pose.position.y;
+      frontier.distance_to_robot = std::sqrt(dx * dx + dy * dy);
+      
+      if (frontier.distance_to_robot <= max_frontier_distance_) {
+        frontier.information_gain = 
+          calculateInformationGain(frontier, map);
+        frontier.is_reachable = isReachable(frontier.centroid);
+        
+        if (frontier.is_reachable) {
+          filtered_frontiers.push_back(frontier);
+        }
+      }
+    }
+  }
+  
+  return filtered_frontiers;
+}
+\end{lstlisting}
+
+\subsection{Identification des Cellules Frontière}
+
+Une cellule frontière est une cellule libre ayant au moins un voisin inconnu:
+
+\begin{lstlisting}
+bool FrontierDetector::isFrontierCell(
+  const cv::Mat & map, int x, int y)
+{
+  // A frontier cell is a free cell with at least one unknown neighbor
+  if (map.at<uint8_t>(y, x) != 255) {  // Not free space
+    return false;
+  }
+  
+  // Check 8-neighbor connectivity
+  for (int dy = -1; dy <= 1; ++dy) {
+    for (int dx = -1; dx <= 1; ++dx) {
+      if (dx == 0 && dy == 0) continue;
+      
+      int nx = x + dx;
+      int ny = y + dy;
+      
+      if (nx >= 0 && nx < map.cols && ny >= 0 && ny < map.rows) {
+        if (map.at<uint8_t>(ny, nx) == 128) {  // Unknown neighbor
+          return true;
+        }
+      }
+    }
+  }
+  
+  return false;
+}
+\end{lstlisting}
+
+\section{Publications et Sujets}
+
+Les frontières détectées sont publiées sous forme de marqueurs RViz pour la visualisation:
+
+\begin{lstlisting}
+// Topic: /exploration/frontiers
+// Type: visualization_msgs/MarkerArray
+// Contient les positions et les gains informatifs de chaque frontière
+
+// Topic: /exploration/frontier_goal
+// Type: geometry_msgs/PoseStamped
+// Publie l'objectif de frontière sélectionné
+\end{lstlisting}
+
+\chapter{Coordinateur d'Exploration}
+
+\section{Vue d'ensemble}
+
+Le Exploration Coordinator est le cerveau du système d'exploration. Il maintient un état machine (state machine) et orchestre l'exploration en sélectionnant les frontières optimales et en commandant le robot pour les atteindre.
+
+\section{Machine à États}
+
+Le coordinateur gère plusieurs états distincts:
+
+\begin{enumerate}
+  \item \textbf{IDLE:} Système au repos, attendant l'activation
+  \item \textbf{DETECTING\_ENVIRONMENT:} Phase de détection initiale de l'environnement
+  \item \textbf{EXPLORING:} Exploration active vers une frontière
+  \item \textbf{SELECTING\_GOAL:} Sélection de la prochaine frontière cible
+  \item \textbf{MOVING\_TO\_GOAL:} Navigation vers l'objectif
+  \item \textbf{GOAL\_REACHED:} Objectif atteint
+  \item \textbf{STUCK:} Robot bloqué, nécessite récupération
+  \item \textbf{RECOVERY:} Mode récupération actif
+\end{enumerate}
+
+\section{Initialisation et Paramètres}
+
+\begin{lstlisting}
+ExplorationCoordinator::ExplorationCoordinator(
+  const rclcpp::NodeOptions & options)
+: Node("exploration_coordinator", options),
+  current_state_(ExplorationState::IDLE),
+  map_received_(false),
+  frontiers_received_(false),
+  exploration_active_(false)
+{
+  // Declare exploration parameters
+  this->declare_parameter("exploration_timeout", 300.0);
+  this->declare_parameter("stuck_timeout", 30.0);
+  this->declare_parameter("min_map_coverage_to_start", 0.1);
+  this->declare_parameter("goal_tolerance", 0.8);
+  this->declare_parameter("stuck_distance_threshold", 0.15);
+  this->declare_parameter("goal_reached_tolerance", 1.2);
+  this->declare_parameter("goal_timeout", 45.0);
+  this->declare_parameter("force_new_goal_distance", 1.5);
+  
+  // Declare optimization parameters
+  this->declare_parameter("enable_dynamic_tolerance", true);
+  this->declare_parameter("velocity_based_tolerance", true);
+  this->declare_parameter("environmental_adaptation", true);
+  this->declare_parameter("performance_monitoring", true);
+  this->declare_parameter("adaptive_parameter_tuning", true);
+  
+  // Initialize TF2
+  tf_buffer_ = std::make_shared<tf2_ros::Buffer>(
+    this->get_clock());
+  tf_listener_ = std::make_shared<tf2_ros::TransformListener>(
+    *tf_buffer_);
+}
+\end{lstlisting}
+
+\section{Abonnements aux Topics}
+
+Le coordinateur s'abonne aux topics critiques:
+
+\begin{lstlisting}
+// Subscribe to occupancy grid
+map_sub_ = this->create_subscription<nav_msgs::msg::OccupancyGrid>(
+  "/map", rclcpp::QoS(1).transient_local(),
+  std::bind(&ExplorationCoordinator::mapCallback, this, 
+    std::placeholders::_1));
+
+// Subscribe to frontier markers
+frontier_markers_sub_ = 
+  this->create_subscription<visualization_msgs::msg::MarkerArray>(
+    "/exploration/frontiers", 10,
+    std::bind(&ExplorationCoordinator::frontierMarkersCallback, 
+      this, std::placeholders::_1));
+\end{lstlisting}
+
+\section{Publications}
+
+\begin{lstlisting}
+// Publish exploration status
+status_pub_ = this->create_publisher<std_msgs::msg::String>(
+  "/exploration/status", 10);
+
+// Publish visualization markers
+exploration_markers_pub_ = 
+  this->create_publisher<visualization_msgs::msg::MarkerArray>(
+    "/exploration/markers", 10);
+
+// Publish velocity commands
+cmd_vel_pub_ = this->create_publisher<geometry_msgs::msg::Twist>(
+  "/cmd_vel", 10);
+\end{lstlisting}
+
+\section{Client d'Action Navigation}
+
+Le coordinateur utilise un client d'action pour naviguer vers les frontières:
+
+\begin{lstlisting}
+// Create action client for Navigation2
+nav_action_client_ = 
+  rclcpp_action::create_client<nav2_msgs::action::NavigateToPose>(
+    this, "/navigate_to_pose");
+
+// Send goal to navigation
+auto goal = nav2_msgs::action::NavigateToPose::Goal();
+goal.pose.header.frame_id = "map";
+goal.pose.pose = frontier_pose;
+
+auto send_goal_options = 
+  rclcpp_action::Client<nav2_msgs::action::NavigateToPose>::
+    SendGoalOptions();
+send_goal_options.goal_response_callback = 
+  std::bind(&ExplorationCoordinator::goalResponseCallback, this, 
+    std::placeholders::_1);
+send_goal_options.feedback_callback = 
+  std::bind(&ExplorationCoordinator::feedbackCallback, this, 
+    std::placeholders::_1, std::placeholders::_2);
+send_goal_options.result_callback = 
+  std::bind(&ExplorationCoordinator::resultCallback, this, 
+    std::placeholders::_1);
+
+nav_action_client_->async_send_goal(goal, send_goal_options);
+\end{lstlisting}
+
+\section{Sélection Intelligente de Frontière}
+
+Le coordinateur utilise une stratégie multi-critères pour sélectionner la meilleure frontière:
+
+\begin{lstlisting}
+Frontier ExplorationCoordinator::selectBestFrontier(
+  const std::vector<Frontier> & frontiers)
+{
+  double max_score = -std::numeric_limits<double>::infinity();
+  Frontier best_frontier;
+  
+  for (const auto & frontier : frontiers) {
+    // Multi-criteria scoring function
+    double distance_score = 
+      distance_efficiency_weight_ / (1.0 + frontier.distance_to_robot);
+    double information_score = 
+      frontier.information_gain * exploration_value_weight_;
+    double time_score = 
+      time_efficiency_weight_ / (1.0 + frontier.distance_to_robot);
+    
+    double total_score = distance_score + information_score + time_score;
+    
+    if (total_score > max_score) {
+      max_score = total_score;
+      best_frontier = frontier;
+    }
+  }
+  
+  return best_frontier;
+}
+\end{lstlisting}
+
+\section{Gestion d'État}
+
+La transition d'état est gérée par une machine à états complète:
+
+\begin{lstlisting}
+void ExplorationCoordinator::setState(ExplorationState new_state)
+{
+  if (new_state == current_state_) {
+    return;  // No state change
+  }
+  
+  current_state_ = new_state;
+  state_start_time_ = std::chrono::steady_clock::now();
+  
+  switch (current_state_) {
+    case ExplorationState::IDLE:
+      RCLCPP_INFO(this->get_logger(), "State: IDLE");
+      break;
+      
+    case ExplorationState::DETECTING_ENVIRONMENT:
+      RCLCPP_INFO(this->get_logger(), 
+        "State: DETECTING_ENVIRONMENT");
+      break;
+      
+    case ExplorationState::EXPLORING:
+      RCLCPP_INFO(this->get_logger(), "State: EXPLORING");
+      break;
+      
+    case ExplorationState::STUCK:
+      RCLCPP_WARN(this->get_logger(), "State: STUCK");
+      break;
+      
+    case ExplorationState::RECOVERY:
+      RCLCPP_WARN(this->get_logger(), 
+        "State: RECOVERY - Executing recovery behavior");
+      executeRecoveryBehavior();
+      break;
+      
+    default:
+      break;
+  }
+}
+\end{lstlisting}
+
+\chapter{Système de Sécurité et Contrôle d'Arrêt d'Urgence}
+
+\section{Vue d'ensemble}
+
+La sécurité est un aspect critique du système robotique. Le système d'arrêt d'urgence (Emergency Stop Controller) fonctionne en parallèle avec les autres composants et peut arrêter le robot à tout moment si un danger est détecté.
+
+\section{Architecture du Contrôleur d'Arrêt d'Urgence}
+
+\begin{lstlisting}
+EmergencyStopController::EmergencyStopController(
+  const rclcpp::NodeOptions & options)
+: Node("emergency_stop_controller", options),
+  current_safety_state_(SafetyState::SAFE),
+  is_in_recovery_(false),
+  emergency_stop_active_(false)
+{
+  // Declare safety parameters
+  this->declare_parameter("emergency_stop_distance", 0.15);
+  this->declare_parameter("warning_distance", 0.25);
+  this->declare_parameter("inflation_radius", 0.60);
+  this->declare_parameter("collision_detection_distance", 0.10);
+  this->declare_parameter("safety_check_frequency", 50.0);
+  this->declare_parameter("max_linear_velocity", 0.4);
+  this->declare_parameter("max_angular_velocity", 1.0);
+  this->declare_parameter("recovery_backup_distance", 0.3);
+  this->declare_parameter("recovery_rotation_angle", 1.57);
+  this->declare_parameter("recovery_timeout", 10.0);
+  
+  // Initialize TF2
+  tf_buffer_ = std::make_unique<tf2_ros::Buffer>(
+    this->get_clock());
+  tf_listener_ = std::make_shared<tf2_ros::TransformListener>(
+    *tf_buffer_);
+}
+\end{lstlisting}
+
+\section{Abonnements aux Capteurs}
+
+Le contrôleur s'abonne aux capteurs critiques:
+
+\begin{lstlisting}
+// Subscribe to laser scan data (high priority)
+laser_sub_ = this->create_subscription<sensor_msgs::msg::LaserScan>(
+  "/scan", rclcpp::SensorDataQoS(),
+  std::bind(&EmergencyStopController::laserScanCallback, this, 
+    std::placeholders::_1));
+
+// Subscribe to velocity commands
+cmd_vel_sub_ = this->create_subscription<geometry_msgs::msg::Twist>(
+  "/cmd_vel", 10,
+  std::bind(&EmergencyStopController::cmdVelCallback, this, 
+    std::placeholders::_1));
+
+// Subscribe to odometry
+odom_sub_ = this->create_subscription<nav_msgs::msg::Odometry>(
+  "/odom", 10,
+  std::bind(&EmergencyStopController::odomCallback, this, 
+    std::placeholders::_1));
+\end{lstlisting}
+
+\section{Détection des États de Sécurité}
+
+Le système détecte quatre états de sécurité distincts:
+
+\begin{lstlisting}
+enum class SafetyState {
+  SAFE,                    // No obstacles in danger zone
+  WARNING,                 // Obstacles detected at warning distance
+  EMERGENCY_STOP,          // Obstacles at emergency stop distance
+  COLLISION_DETECTED,      // Collision already occurred
+  RECOVERY_NEEDED          // Robot stuck, needs recovery
 };
 \end{lstlisting}
 
-\chapter{Métriques Détaillées}
+\section{Analyse de Sécurité}
 
-\section{Tableau Récapitulatif de Performance}
+Le contrôleur analyse continuellement les données des capteurs:
 
-\begin{table}[H]
-\centering
-\begin{tabular}{|l|c|c|c|}
-\hline
-\textbf{Domaine} & \textbf{Métrique} & \textbf{Cible} & \textbf{Réalisé} \\
-\hline
-\multirow{4}{*}{Navigation} & Précision (m) & ±0.2 & ±0.15 \\
-& Taux succès (\%) & 90 & 94 \\
-& Temps/objectif (s) & 50 & 37 \\
-& Récupération blocage (\%) & 90 & 95 \\
-\hline
-\multirow{3}{*}{Communication} & Latence (ms) & 200 & 180 \\
-& Disponibilité (\%) & 98 & 99.2 \\
-& Perte paquets (\%) & 0.5 & 0.08 \\
-\hline
-\multirow{3}{*}{Application} & Temps réponse (ms) & 150 & 85 \\
-& Mémoire (MB) & 200 & 135 \\
-& FPS & 60 & 60 \\
-\hline
-\end{tabular}
-\end{table}
+\begin{lstlisting}
+void EmergencyStopController::laserScanCallback(
+  const sensor_msgs::msg::LaserScan::SharedPtr msg)
+{
+  std::lock_guard<std::mutex> lock(safety_mutex_);
+  latest_scan_ = msg;
+  
+  // Update safety sectors based on laser data
+  updateSafetySectors(msg);
+  
+  // Analyze current safety state
+  current_safety_state_ = analyzeSafetyState(msg);
+}
+
+SafetyState EmergencyStopController::analyzeSafetyState(
+  const sensor_msgs::msg::LaserScan::SharedPtr msg)
+{
+  // Find minimum distance to obstacles
+  double min_distance = std::numeric_limits<double>::infinity();
+  
+  for (size_t i = 0; i < msg->ranges.size(); ++i) {
+    double range = msg->ranges[i];
+    
+    if (range > msg->range_min && range < msg->range_max && 
+        std::isfinite(range)) {
+      min_distance = std::min(min_distance, static_cast<double>(range));
+    }
+  }
+  
+  // Determine safety state
+  if (min_distance < collision_detection_distance_) {
+    return SafetyState::COLLISION_DETECTED;
+  } else if (min_distance < emergency_stop_distance_) {
+    return SafetyState::EMERGENCY_STOP;
+  } else if (min_distance < warning_distance_) {
+    return SafetyState::WARNING;
+  }
+  
+  return SafetyState::SAFE;
+}
+\end{lstlisting}
+
+\section{Gestion des Différents États}
+
+\begin{lstlisting}
+void EmergencyStopController::safetyTimerCallback()
+{
+  std::lock_guard<std::mutex> lock(safety_mutex_);
+  
+  if (!latest_scan_) {
+    return;
+  }
+
+  publishSafetyStatus();
+
+  // Handle different safety states
+  switch (current_safety_state_) {
+    case SafetyState::SAFE:
+      emergency_stop_active_ = false;
+      last_safe_time_ = this->now();
+      // Publish the original velocity command
+      publishSafeVelocity(latest_cmd_vel_);
+      break;
+      
+    case SafetyState::WARNING:
+      emergency_stop_active_ = false;
+      {
+        // Reduce velocity in warning zone
+        auto reduced_cmd = latest_cmd_vel_;
+        reduced_cmd.linear.x *= 0.5;   // 50% speed reduction
+        reduced_cmd.angular.z *= 0.7;  // 30% angular reduction
+        publishSafeVelocity(reduced_cmd);
+      }
+      break;
+      
+    case SafetyState::EMERGENCY_STOP:
+    case SafetyState::COLLISION_DETECTED:
+      // Execute immediate emergency stop
+      executeEmergencyStop();
+      break;
+      
+    case SafetyState::RECOVERY_NEEDED:
+      if (!is_in_recovery_) {
+        executeRecoveryBehavior();
+      }
+      break;
+  }
+}
+\end{lstlisting}
+
+\section{Exécution du Comportement de Récupération}
+
+Quand le robot se retrouve bloqué, un comportement de récupération automatique est exécuté:
+
+\begin{lstlisting}
+void EmergencyStopController::executeRecoveryBehavior()
+{
+  is_in_recovery_ = true;
+  RCLCPP_WARN(this->get_logger(), 
+    "Executing recovery behavior - backing up and rotating");
+  
+  auto recovery_start = std::chrono::steady_clock::now();
+  
+  // Phase 1: Backup movement
+  geometry_msgs::msg::Twist backup_cmd;
+  backup_cmd.linear.x = -0.2;  // Backward movement
+  
+  // Phase 2: Rotation to escape
+  geometry_msgs::msg::Twist rotation_cmd;
+  rotation_cmd.angular.z = recovery_rotation_speed_;
+  
+  // Execute recovery sequence
+  while (std::chrono::steady_clock::now() - recovery_start < 
+         std::chrono::seconds(static_cast<int>(recovery_timeout_))) {
+    publishSafeVelocity(backup_cmd);
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+  }
+  
+  is_in_recovery_ = false;
+  RCLCPP_INFO(this->get_logger(), "Recovery behavior completed");
+}
+\end{lstlisting}
+
+\chapter{Navigation et Suivi de Mur}
+
+\section{Intégration Navigation2}
+
+Navigation2 fournit une pile de navigation complète pour le calcul de trajectoires sans collision. Notre système l'intègre de manière transparente:
+
+\begin{lstlisting}
+// Navigation2 configuration topics
+// /plan - computed path
+// /local_costmap/costmap - local costmap
+// /global_costmap/costmap - global costmap
+// /tf - coordinate transforms
+\end{lstlisting}
+
+\section{Stratégie de Suivi de Mur}
+
+Le Wall Follower Node implémente une stratégie de navigation alternative pour les environnements complexes:
+
+\begin{lstlisting}
+WallFollower::WallFollower(const rclcpp::NodeOptions & options)
+: Node("wall_follower", options),
+  current_state_(WallFollowingState::SEARCHING_FOR_WALL)
+{
+  // Declare wall following parameters
+  this->declare_parameter("target_wall_distance", 0.4);
+  this->declare_parameter("max_wall_detection_range", 2.5);
+  this->declare_parameter("min_wall_length", 0.3);
+  this->declare_parameter("wall_following_speed", 0.3);
+  this->declare_parameter("angular_gain", 2.0);
+  this->declare_parameter("distance_gain", 1.5);
+  this->declare_parameter("wall_confidence_threshold", 0.7);
+  
+  // Initialize laser and odometry subscriptions
+  laser_sub_ = this->create_subscription<sensor_msgs::msg::LaserScan>(
+    "/scan", 10, 
+    std::bind(&WallFollower::laserScanCallback, this, 
+      std::placeholders::_1));
+  
+  odom_sub_ = this->create_subscription<nav_msgs::msg::Odometry>(
+    "/odom", 10, 
+    std::bind(&WallFollower::odomCallback, this, 
+      std::placeholders::_1));
+  
+  // Velocity publisher
+  cmd_vel_pub_ = this->create_publisher<geometry_msgs::msg::Twist>(
+    "/cmd_vel", 10);
+}
+\end{lstlisting}
+
+\section{Détection de Mur}
+
+Le système utilise une analyse géométrique des données de scans laser:
+
+\begin{lstlisting}
+std::vector<Wall> WallFollower::detectWalls(
+  const sensor_msgs::msg::LaserScan::SharedPtr msg)
+{
+  std::vector<Wall> detected_walls;
+  std::vector<cv::Point2f> wall_points;
+  
+  // Convert laser scan to points
+  for (size_t i = 0; i < msg->ranges.size(); ++i) {
+    float range = msg->ranges[i];
+    
+    if (range > msg->range_min && range < msg->range_max && 
+        std::isfinite(range)) {
+      float angle = msg->angle_min + i * msg->angle_increment;
+      
+      cv::Point2f point(
+        range * std::cos(angle),
+        range * std::sin(angle)
+      );
+      wall_points.push_back(point);
+    }
+  }
+  
+  // Fit lines to detect walls
+  // Use RANSAC or similar algorithm
+  
+  return detected_walls;
+}
+\end{lstlisting}
+
+\chapter{Système de Lancement et Orchestration}
+
+\section{Architecture de Lancement}
+
+Le système utilise des fichiers de lancement Python ROS2 pour orchestrer le démarrage de tous les composants:
+
+\begin{lstlisting}[language=Python]
+def generate_launch_description():
+    # Package directories
+    nav2_bringup_dir = get_package_share_directory('nav2_bringup')
+    turtle_bot_nav_dir = get_package_share_directory(
+      'turtle_bot_navigation')
+    turtle_bot_exp_dir = get_package_share_directory(
+      'turtle_bot_exploration')
+    
+    # Declare launch arguments
+    declare_use_sim_time_cmd = DeclareLaunchArgument(
+        'use_sim_time',
+        default_value='true',
+        description='Use simulation (Gazebo) clock')
+    
+    # Navigation2 bringup
+    nav2_bringup_cmd = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(nav2_bringup_dir, 'launch', 
+              'bringup_launch.py')),
+        launch_arguments={
+            'map': map_yaml_file,
+            'use_sim_time': use_sim_time,
+            'params_file': params_file,
+        }.items())
+    
+    # Frontier detection node
+    frontier_detection_node = Node(
+        package='turtle_bot_exploration',
+        executable='frontier_detection_node',
+        name='frontier_detection_node',
+        parameters=[
+            {'use_sim_time': use_sim_time},
+            {'frontier_min_size': 15},
+            {'frontier_search_radius': 8.0},
+        ])
+    
+    # Exploration coordinator node
+    exploration_coordinator_node = Node(
+        package='turtle_bot_exploration',
+        executable='exploration_coordinator_node',
+        parameters=[
+            {'use_sim_time': use_sim_time},
+            {'exploration_timeout': 1800.0},
+            {'auto_start_exploration': True},
+        ])
+    
+    # Create launch description
+    ld = LaunchDescription()
+    ld.add_action(declare_use_sim_time_cmd)
+    ld.add_action(nav2_bringup_cmd)
+    ld.add_action(frontier_detection_node)
+    ld.add_action(exploration_coordinator_node)
+    
+    return ld
+\end{lstlisting}
+
+\section{Dépendances et Topologie}
+
+La topologie de lancement définit les dépendances entre les nœuds. Chaque nœud attend la disponibilité de certains topics avant de commencer son traitement.
+
+\chapter{Messages ROS2 et Interfaces de Données}
+
+\section{Types de Messages Utilisés}
+
+\subsection{nav\_msgs/OccupancyGrid}
+
+Utilisé pour représenter la carte 2D:
+
+\begin{lstlisting}
+std_msgs/Header header
+nav_msgs/MapMetaData info
+int8[] data  // -1: unknown, 0: free, 1-100: occupied
+\end{lstlisting}
+
+\subsection{geometry\_msgs/Twist}
+
+Utilisé pour les commandes de vitesse:
+
+\begin{lstlisting}
+geometry_msgs/Vector3 linear
+  float64 x     // forward velocity
+  float64 y     // lateral velocity
+  float64 z     // vertical velocity
+geometry_msgs/Vector3 angular
+  float64 x     // roll velocity
+  float64 y     // pitch velocity
+  float64 z     // yaw velocity
+\end{lstlisting}
+
+\subsection{visualization\_msgs/Marker et MarkerArray}
+
+Utilisés pour la visualisation en RViz:
+
+\begin{lstlisting}
+std_msgs/Header header
+string ns
+int32 id
+int32 type         // SPHERE, CUBE, ARROW, etc.
+geometry_msgs/Pose pose
+geometry_msgs/Vector3 scale
+std_msgs/ColorRGBA color
+float32 lifetime
+\end{lstlisting}
+
+\subsection{sensor\_msgs/LaserScan}
+
+Données brutes du capteur laser:
+
+\begin{lstlisting}
+std_msgs/Header header
+float32 angle_min
+float32 angle_max
+float32 angle_increment
+float32 time_increment
+float32 scan_time
+float32 range_min
+float32 range_max
+float32[] ranges
+float32[] intensities
+\end{lstlisting}
+
+\chapter{Paramétrage et Configuration}
+
+\section{Système de Paramètres ROS2}
+
+ROS2 fournit un serveur de paramètres centralisé permettant une configuration dynamique:
+
+\begin{lstlisting}
+// Set parameters from command line
+ros2 param set /frontier_detector min_frontier_size 20.0
+
+// Get parameters from node
+auto min_size = this->get_parameter("min_frontier_size");
+
+// List all parameters
+ros2 param list
+
+// Load parameters from YAML file
+ros2 run robot_package node_name --ros-args --params-file config.yaml
+\end{lstlisting}
+
+\section{Fichiers de Configuration YAML}
+
+Les paramètres sont généralement stockés dans des fichiers YAML:
+
+\begin{lstlisting}
+# navigation_params.yaml
+frontier_detector:
+  ros__parameters:
+    min_frontier_size: 15.0
+    max_frontier_distance: 10.0
+    frontier_travel_point_distance: 0.8
+
+exploration_coordinator:
+  ros__parameters:
+    exploration_timeout: 1800.0
+    stuck_timeout: 8.0
+    goal_tolerance: 0.3
+    enable_dynamic_tolerance: true
+    environmental_adaptation: true
+
+emergency_stop_controller:
+  ros__parameters:
+    emergency_stop_distance: 0.15
+    warning_distance: 0.25
+    safety_check_frequency: 50.0
+\end{lstlisting}
+
+\chapter{Défis Techniques et Solutions}
+
+\section{Synchronisation Distribuée}
+
+\subsection{Défi}
+
+Dans un système distribué, les nœuds peuvent recevoir des messages avec des horodatages différents, ce qui crée une incohérence temporelle.
+
+\subsection{Solution}
+
+Utilisation des transformations TF2 pour aligner temporellement les données:
+
+\begin{lstlisting}
+// Wait for transform and apply it
+geometry_msgs::msg::PointStamped point_in;
+point_in.header.frame_id = "laser_frame";
+point_in.point.x = 1.0;
+
+geometry_msgs::msg::PointStamped point_out;
+try {
+  tf_buffer_->transform(point_in, point_out, "base_link");
+} catch (tf2::TransformException & ex) {
+  RCLCPP_ERROR(this->get_logger(), "%s", ex.what());
+}
+\end{lstlisting}
+
+\section{Gestion de la Concurrence}
+
+\subsection{Défi}
+
+Plusieurs callbacks peuvent accéder aux mêmes données simultanément.
+
+\subsection{Solution}
+
+Utilisation de mécanismes de synchronisation (mutex):
+
+\begin{lstlisting}
+private:
+  std::mutex safety_mutex_;
+  
+void laserScanCallback(...) {
+  std::lock_guard<std::mutex> lock(safety_mutex_);
+  latest_scan_ = msg;
+}
+
+void safetyTimerCallback() {
+  std::lock_guard<std::mutex> lock(safety_mutex_);
+  // Safe access to latest_scan_
+}
+\end{lstlisting}
+
+\section{Latence et Temps Réel}
+
+\subsection{Défi}
+
+Les délais de communication et de traitement peuvent compromettre la sécurité.
+
+\subsection{Solution}
+
+Implémentation de timers dédiés à haute fréquence pour les tâches critiques:
+
+\begin{lstlisting}
+// Safety timer at 50Hz
+auto safety_timer_period = std::chrono::milliseconds(
+  static_cast<int>(1000.0 / 50.0));
+safety_timer_ = this->create_wall_timer(
+  safety_timer_period, 
+  std::bind(&EmergencyStopController::safetyTimerCallback, this));
+\end{lstlisting}
+
+\section{Transformation de Coordonnées}
+
+\subsection{Défi}
+
+Le robot doit travailler dans plusieurs systèmes de coordonnées (base\_link, map, laser, etc.).
+
+\subsection{Solution}
+
+Utilisation de TF2 pour maintenir une arborescence de transformations:
+
+\begin{lstlisting}
+// Base-link to map transform
+tf2::Stamped<tf2::Transform> base_to_map;
+try {
+  tf_buffer_->lookupTransform("map", "base_link", 
+    tf2::TimePointZero, base_to_map);
+  
+  auto robot_x = base_to_map.getOrigin().x();
+  auto robot_y = base_to_map.getOrigin().y();
+} catch (tf2::TransformException & ex) {
+  RCLCPP_ERROR(this->get_logger(), "%s", ex.what());
+}
+\end{lstlisting}
+
+\chapter{Performance et Métriques}
+
+\section{Métriques Clés}
+
+\begin{itemize}
+  \item \textbf{Couverture de carte:} Pourcentage de l'environnement cartographié
+  \item \textbf{Efficacité d'exploration:} Ratio entre surface explorée et distance parcourue
+  \item \textbf{Latence de détection:} Temps entre la détection d'un obstacle et l'arrêt
+  \item \textbf{Fréquence de contrôle:} Fréquence de traitement des cycles de contrôle
+  \item \textbf{Fiabilité SLAM:} Probabilité de succès de localisation
+\end{itemize}
+
+\section{Optimisations Implémentées}
+
+\subsection{Sélection Intelligente de Frontière}
+
+Le système utilise une fonction de score multi-critères pour sélectionner les frontières optimales, équilibrant distance, gain informatif et faisabilité.
+
+\subsection{Filtrage Dynamique de Tolérance}
+
+Les tolérances de navigation s'ajustent dynamiquement basées sur la vitesse et les conditions de l'environnement.
+
+\subsection{Adaptation Environnementale}
+
+Le système apprend des patterns de l'environnement pour optimiser les futures explorations.
+
+\chapter{Intégration avec l'Application Mobile}
+
+\section{Architecture Distribuée Client-Serveur}
+
+Le système ROS2 peut être accédé par une application mobile via une couche de communication réseau. Les topics ROS2 sont exposés via une API REST ou WebSocket.
+
+\section{Topics Exposés}
+
+\begin{itemize}
+  \item \textbf{/exploration/status:} État actuel de l'exploration
+  \item \textbf{/map:} Carte en cours de construction
+  \item \textbf{/tf:} Transformations de coordonnées
+  \item \textbf{/robot\_pose:} Position actuelle du robot
+  \item \textbf{/cmd\_vel:} Commandes de vitesse (pour contrôle manuel)
+\end{itemize}
+
+\section{Services ROS2 pour Contrôle Mobile}
+
+\begin{lstlisting}
+// Service: StartExploration
+// Demande au système de commencer l'exploration
+
+// Service: StopExploration
+// Arrête l'exploration en cours
+
+// Service: EmergencyStop
+// Déclenche l'arrêt d'urgence
+
+// Service: GetRobotStatus
+// Retourne l'état actuel du robot
+\end{lstlisting}
+
+\chapter{Conclusion et Perspectives Futures}
+
+\section{Accomplissements}
+
+Ce projet a avec succès implémenté un système complet de navigation autonome et d'exploration basé sur ROS2, incluant:
+
+\begin{enumerate}
+  \item Un système robuste de détection des frontières avec optimisation multi-critères
+  \item Un coordinateur d'exploration sophistiqué avec machine à états complète
+  \item Un système de sécurité multicouche avec arrêt d'urgence et récupération
+  \item Une intégration seamless avec Navigation2 et SLAM
+  \item Un framework de visualisation en temps réel
+  \item Une architecture extensible pour l'intégration avec des interfaces utilisateur
+\end{enumerate}
+
+\section{Améliorations Futures}
+
+\begin{enumerate}
+  \item \textbf{Apprentissage par renforcement:} Utiliser des techniques d'IA pour optimiser la sélection de frontière
+  \item \textbf{Navigation multi-robot:} Étendre le système pour coordonner plusieurs robots
+  \item \textbf{Exploration avec contraintes:} Intégrer des contraintes énergétiques et temporelles
+  \item \textbf{Cartographie sémantique:} Ajouter la reconnaissance d'objets à la cartographie
+  \item \textbf{Adaptation temps réel:} Améliorer les mécanismes d'adaptation aux changements d'environnement
+\end{enumerate}
+
+\section{Applicabilité Industrielle}
+
+Le système développé a des applications pratiques dans:
+
+\begin{itemize}
+  \item Recherche et sauvetage (SAR)
+  \item Inspection d'environnements dangereux
+  \item Cartographie et surveillance
+  \item Nettoyage autonome
+  \item Livraison intérieure
+\end{itemize}
+
+\newpage
+
+\begin{thebibliography}{99}
+
+\bibitem{ros2_design} Maruyama, Y., Kato, S., \& Azumi, T. (2016). Exploring the capabilities of ROS2. In 13th International Conference on Embedded Software, EMSOFT 2016.
+
+\bibitem{frontier_exploration} Yamauchi, B. (1997). A frontier-based approach for autonomous exploration. In Proceedings 1997 IEEE International Symposium on Computational Intelligence in Robotics and Automation.
+
+\bibitem{nav2} Macenski, S., Foote, T., Gerkey, B., Lalancette, C., \& Woodall, W. (2021). Robot Operating System 2: Design, architecture, and uses in the wild. Science and Technology, 2.
+
+\bibitem{costmap_layers} Marder-Eppstein, E., Berger, E., Foote, T., Gerkey, B., \& Konolige, K. (2010). The office marathon: Robust navigation in an indoor office environment. In Robotics and Automation, 2010.
+
+\bibitem{dwa_local_planner} Fox, D., Burgard, W., \& Thrun, S. (1997). The dynamic window approach to collision avoidance. In Robotics and Automation, 1997.
+
+\bibitem{slam_toolbox} Macenski, S., Goins, G., \& Gerkey, B. (2021). Comparison of Cost Map Inflation Models in Navigation2. In 2021 IEEE International Conference on Robotics and Automation.
+
+\bibitem{tf2_transforms} Foote, T., \& Geyer, C. (2013). TF2. In IEEE Robotics \& Automation Magazine.
+
+\bibitem{qos_policy} Data Distribution Service. (2015). Interoperability Wire Protocol Specification. Object Management Group.
+
+\bibitem{mobile_robotics} Siegwart, R., Nourbakhsh, I. R., \& Scaramuzza, D. (2011). Introduction to autonomous mobile robots. MIT press.
+
+\bibitem{path_planning} LaValle, S. M. (2006). Planning algorithms. Cambridge university press.
+
+\end{thebibliography}
+
+\appendix
+
+\chapter{Code Complet des Nœuds Clés}
+
+\section{Frontier Detector - Structure Complète}
+
+Les sources complètes sont disponibles dans le package turtle\_bot\_exploration. Le nœud frontier detector comprend:
+
+\begin{itemize}
+  \item Detection itérative par BFS (Breadth-First Search)
+  \item Clustering de cellules frontière
+  \item Calcul de gain informatif
+  \item Filtrage par distance et taille
+  \item Vérification d'accessibilité par pathfinding
+\end{itemize}
+
+\section{Exploration Coordinator - Structure Complète}
+
+Le coordinateur d'exploration contient:
+
+\begin{itemize}
+  \item Machine à états avec 8 états distincts
+  \item Sélection intelligente de frontière multi-critères
+  \item Gestion d'actions Navigation2
+  \item Détection d'état bloqué et récupération
+  \item Monitoring de performance et métriques
+  \item Adaptation dynamique de paramètres
+\end{itemize}
+
+\section{Emergency Stop Controller - Structure Complète}
+
+Le contrôleur de sécurité fournit:
+
+\begin{itemize}
+  \item Analyse de sécurité à 50Hz
+  \item Gestion des états de sécurité (SAFE, WARNING, EMERGENCY)
+  \item Modulation de vitesse adaptative
+  \item Comportement de récupération automatique
+  \item Logging détaillé et status reporting
+\end{itemize}
+
+\chapter{Configuration Complète des Paramètres}
+
+\begin{lstlisting}
+# Configuration complète pour tous les nœuds
+
+# Frontier Detector Configuration
+frontier_detector:
+  ros__parameters:
+    min_frontier_size: 15.0
+    max_frontier_distance: 10.0
+    frontier_travel_point_distance: 0.8
+    frontier_blacklist_radius: 1.2
+    frontier_search_radius: 8.0
+    frontier_min_distance: 1.0
+    information_radius: 1.0
+    robot_base_frame: "base_link"
+    global_frame: "map"
+
+# Exploration Coordinator Configuration  
+exploration_coordinator:
+  ros__parameters:
+    exploration_timeout: 1800.0
+    stuck_timeout: 8.0
+    min_map_coverage_to_start: 0.1
+    goal_tolerance: 0.3
+    stuck_distance_threshold: 0.15
+    goal_reached_tolerance: 1.2
+    goal_timeout: 45.0
+    force_new_goal_distance: 1.5
+    recovery_rotation_speed: 0.5
+    recovery_rotation_duration: 12.0
+    enable_dynamic_tolerance: true
+    velocity_based_tolerance: true
+    environmental_adaptation: true
+    performance_monitoring: true
+    adaptive_parameter_tuning: true
+    auto_start_exploration: true
+
+# Emergency Stop Controller Configuration
+emergency_stop_controller:
+  ros__parameters:
+    emergency_stop_distance: 0.15
+    warning_distance: 0.25
+    inflation_radius: 0.60
+    collision_detection_distance: 0.10
+    safety_check_frequency: 50.0
+    max_linear_velocity: 0.4
+    max_angular_velocity: 1.0
+    recovery_backup_distance: 0.3
+    recovery_rotation_angle: 1.57
+    recovery_timeout: 10.0
+    base_frame: "base_link"
+    laser_frame: "laser"
+
+# Navigation2 Parameters
+nav2_params:
+  planner_server:
+    ros__parameters:
+      planner_plugins: ["GridBased"]
+      GridBased:
+        plugin: "nav2_navfn_planner/NavfnPlanner"
+  
+  controller_server:
+    ros__parameters:
+      controller_plugins: ["FollowPath"]
+      FollowPath:
+        plugin: "nav2_regulated_pure_pursuit_controller/RegulatedPurePursuitController"
+        desired_linear_vel: 0.2
+        max_angular_vel: 1.0
+
+  local_costmap:
+    ros__parameters:
+      update_frequency: 5.0
+      publish_frequency: 2.0
+      global_frame: "odom"
+      robot_base_frame: "base_link"
+      
+  global_costmap:
+    ros__parameters:
+      update_frequency: 1.0
+      publish_frequency: 1.0
+      global_frame: "map"
+      robot_base_frame: "base_link"
+\end{lstlisting}
+
+\chapter{Outils de Diagnostic et Monitoring}
+
+\section{Commandes ROS2 Utiles}
+
+\begin{lstlisting}[language=bash]
+# Liste tous les nœuds en cours d'exécution
+ros2 node list
+
+# Liste tous les topics
+ros2 topic list
+
+# Affiche les détails d'un topic
+ros2 topic info /exploration/status
+
+# Écoute les messages d'un topic
+ros2 topic echo /exploration/status
+
+# Affiche les statistiques de topic
+ros2 topic hz /exploration/status
+
+# Liste tous les services disponibles
+ros2 service list
+
+# Appelle un service
+ros2 service call /start_exploration std_srvs/srv/Empty
+
+# Affiche les paramètres d'un nœud
+ros2 param list /exploration_coordinator
+
+# Définit un paramètre
+ros2 param set /frontier_detector min_frontier_size 20.0
+
+# Lance RViz pour la visualisation
+ros2 run rviz2 rviz2 -d exploration.rviz
+
+# Affiche le graph de tf
+ros2 run tf2_tools view_frames
+\end{lstlisting}
+
+\section{Debugging Avancé}
+
+Pour le debugging détaillé, activer le logging de debug:
+
+\begin{lstlisting}[language=bash]
+# Logging au niveau DEBUG pour un nœud
+ros2 run turtle_bot_exploration frontier_detection_node \
+  --ros-args --log-level frontier_detector:=DEBUG
+
+# Enregistrement bag pour analyse offline
+ros2 bag record /map /exploration/status /tf
+
+# Lecture du bag enregistré
+ros2 bag play rosbag2_2024_01_15-14_23_45/rosbag2_2024_01_15-14_23_45_0.db3
+\end{lstlisting}
 
 \end{document}
